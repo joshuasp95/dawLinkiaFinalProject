@@ -1,0 +1,33 @@
+# Archivos de compilación de Maven
+/backend/target/
+
+# Archivos de configuración local que no deben estar en el repositorio
+/backend/src/main/resources/application.properties
+
+# Archivos de IDE (IntelliJ, Eclipse, VS Code)
+/backend/.idea/
+/backend/*.iml
+/backend/*.ipr
+/backend/*.iws
+/frontend/.idea/
+/frontend/*.iml
+/frontend/*.ipr
+/frontend/*.iws
+
+# Archivos de logs
+*.log
+
+# Directorios de dependencias de Node.js si tienes un frontend
+/frontend/node_modules/
+
+# Archivos de entorno
+.env
+
+# Otros archivos generados
+*.class
+*.jar
+*.war
+*.ear
+
+# Carpeta con archivos a ignorar
+ignore/

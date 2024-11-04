@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  daw-db:
+    image: mysql:8.0
+    container_name: daw-db
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'dawFinalProject'
+      MYSQL_USER: 'root'
+      MYSQL_PASSWORD: 'usopp12*'
+      MYSQL_ROOT_PASSWORD: 'usopp12*'
+    ports:
+      - '3306:3306'  # Producción usa el puerto estándar
+    volumes:
+      - my-db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  daw-backend:
+    build: ./backend/dawFinalProject
+    container_name: daw-backend
+    ports:
+      - '8081:8081'
+    depends_on:
+      daw-db:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:mysql://daw-db:3306/dawFinalProject?useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: 'root'
+      SPRING_DATASOURCE_PASSWORD: 'usopp12*'
+      SPRING_FLYWAY_PASSWORD: 'usopp12*'
+
+volumes:
+  my-db:
