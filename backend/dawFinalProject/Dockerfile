@@ -9,7 +9,7 @@ COPY pom.xml .
 COPY src ./src
 
 # Ejecuta el comando para construir el proyecto sin Flyway
-RUN mvn clean install -Dspring.flyway.enabled=false
+RUN mvn clean install -Dspring.flyway.enabled=false -Dmaven.test.skip=true
 
 # Usa una imagen de OpenJDK para ejecutar el jar construido
 FROM openjdk:17-jdk-alpine
@@ -17,8 +17,8 @@ FROM openjdk:17-jdk-alpine
 # Copia el jar construido desde el contenedor de Maven
 COPY --from=builder /app/target/dawFinalProject-0.0.1-SNAPSHOT.jar app.jar
 
-# Expone el puerto de la aplicación
-EXPOSE 8081
+# Exponer el puerto de la aplicación y el puerto de depuración
+EXPOSE 8081 5005
 
-# Comando para ejecutar la aplicación
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+# Comando para ejecutar la aplicación con opciones de depuración
+ENTRYPOINT ["java","-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005","-jar","/app.jar"]
