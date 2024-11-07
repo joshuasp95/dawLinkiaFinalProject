@@ -50,7 +50,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // Veficar el encabezado correcto del JWT
         if (header != null && header.startsWith("Bearer ")) {
             token = header.substring(7); // extraemos el token sin el prefijo
-            mail = jwtUtil.extractUsername(token); // extraemos el mail del usuario
+            try {
+                mail = jwtUtil.extractUsername(token);
+            } catch (Exception e) {
+                logger.error("No se pudo obtener el nombre de usuario del token", e);
+            } // extraemos el mail del usuario
         }
 
         // si el usuario existe y no hay autenticacion previa

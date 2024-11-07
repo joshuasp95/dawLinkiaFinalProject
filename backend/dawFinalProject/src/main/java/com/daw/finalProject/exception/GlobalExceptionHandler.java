@@ -3,6 +3,8 @@ package com.daw.finalProject.exception;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,6 +20,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     /**
      * Maneja las excepciones de credenciales inválidas.
      *
@@ -26,6 +30,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<?> handleBadCredentialsException(BadCredentialsException ex) {
+        logger.error("Error BadCredentialsException: ", ex);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales no válidas");
     }
 
@@ -37,11 +42,13 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<?> handleUsernameNotFoundException(UsernameNotFoundException ex) {
+        logger.error("Error UsernameNotFoundException: ", ex);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
     /**
-     * Maneja las excepciones de validación con parametros de entrada en peticiones HTTP
+     * Maneja las excepciones de validación con parametros de entrada en peticiones
+     * HTTP
      *
      * @param ex Excepción MethodArgumentNotValidException
      * @return Respuesta HTTP con estado 400 y detalles de los errores de validación
@@ -49,7 +56,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
-        // Puede haber más de un parametro de entrada con errores asique iteramos todos y los agregamos al map
+        // Puede haber más de un parametro de entrada con errores asique iteramos todos
+        // y los agregamos al map
         ex.getBindingResult().getFieldErrors()
                 .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
         return ResponseEntity.badRequest().body(errors);
@@ -63,6 +71,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGlobalException(Exception ex) {
+        logger.error("Error Global Exception: ", ex);
         ex.printStackTrace(); // Imprime la traza de la excepción para depuración
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocurrió un error inesperado");
     }
