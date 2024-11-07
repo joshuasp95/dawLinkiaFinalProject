@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   daw-db:
@@ -6,12 +6,12 @@ services:
     container_name: daw-db
     restart: always
     environment:
-      MYSQL_DATABASE: 'dawFinalProject'
-      MYSQL_USER: 'root'
-      MYSQL_PASSWORD: 'usopp12*'
-      MYSQL_ROOT_PASSWORD: 'usopp12*'
+      MYSQL_DATABASE: "dawFinalProject"
+      MYSQL_USER: "root"
+      MYSQL_PASSWORD: "usopp12*"
+      MYSQL_ROOT_PASSWORD: "usopp12*"
     ports:
-      - '3306:3306'  # Producción usa el puerto estándar
+      - "3307:3306" # Producción usa el puerto estándar
     volumes:
       - my-db:/var/lib/mysql
     healthcheck:
@@ -24,16 +24,26 @@ services:
     build: ./backend/dawFinalProject
     container_name: daw-backend
     ports:
-      - '8081:8081'
+      - "8081:8081"
+      - "5005:5005"
+
     depends_on:
       daw-db:
         condition: service_healthy
     environment:
       SPRING_PROFILES_ACTIVE: prod
       SPRING_DATASOURCE_URL: jdbc:mysql://daw-db:3306/dawFinalProject?useSSL=false&serverTimezone=UTC
-      SPRING_DATASOURCE_USERNAME: 'root'
-      SPRING_DATASOURCE_PASSWORD: 'usopp12*'
-      SPRING_FLYWAY_PASSWORD: 'usopp12*'
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "usopp12*"
+      SPRING_FLYWAY_PASSWORD: "usopp12*"
+
+  daw-frontend:
+    build: ./frontend
+    container_name: daw-frontend
+    ports:
+      - "3000:80" # Nginx sirve en el puerto 80 del contenedor
+    depends_on:
+      - daw-backend
 
 volumes:
   my-db:
