@@ -7,10 +7,14 @@ import {
     Typography,
     Box,
     Alert,
+    Link,
 } from '@mui/material';
 import authService from '../services/authService';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 const Login = () => {
+    const navigate = useNavigate();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -33,12 +37,11 @@ const Login = () => {
 
             // Guardar el token en localStorage
             localStorage.setItem('token', token);
-            console.log("Token guardado en localStorage:", localStorage.getItem('token')); // Verifica que el token se guarda
+            console.log("Token guardado en localStorage:", localStorage.getItem('token'));
             setSuccess('Inicio de sesión exitoso.');
 
-            // Redirigir o realizar otras acciones después del login
-            // Por ejemplo, redirigir a una página protegida
-            // window.location.href = '/dashboard';
+            // Redirigir a una página protegida
+            navigate('/dashboard');
         } catch (err) {
             if (err.response && err.response.status === 401) {
                 setError('Credenciales no válidas.');
@@ -105,6 +108,12 @@ const Login = () => {
                     >
                         Iniciar Sesión
                     </Button>
+                </Box>
+                <Box sx={{ mt: 2 }}>
+                    {/* Enlace al formulario de registro */}
+                    <Link component={RouterLink} to="/register" variant="body2">
+                        ¿No tienes una cuenta? Regístrate aquí
+                    </Link>
                 </Box>
             </Box>
         </Container>
