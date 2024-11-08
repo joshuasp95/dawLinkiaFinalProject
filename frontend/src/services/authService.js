@@ -16,14 +16,16 @@ const login = async (email, password) => {
     console.log("URL de la solicitud de login:", `${API_URL}login`);
     console.log("Datos enviados:", { email, password });
     try {
-        const response = await axiosInstance.post('login', { email, password });
-        console.log("Respuesta recibida:", response.data);
-        return response.data;
+        const response = await axios.post(`${API_URL}login`, { email, password });
+        console.log("Respuesta recibida:", response);
+
+        return response;
     } catch (error) {
         console.error("Error en login:", error);
         throw error;
     }
 };
+
 
 
 /**
