@@ -18,7 +18,7 @@ const Dashboard = () => {
         const fetchProtectedData = async () => {
             try {
                 // Llamada a la API protegida para obtener un mensaje
-                const response = await authService.axiosInstance.get('auth/protected');
+                const response = await authService.axiosInstance.get('protected');
                 setMessage(response.data.message); // Guarda el mensaje recibido en el estado
             } catch (err) {
                 console.error(err); // Muestra cualquier error en la consola
