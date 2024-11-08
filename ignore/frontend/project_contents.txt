@@ -49,11 +49,47 @@ FROM nginx:alpine
 # Copiar los archivos construidos desde la etapa de construcción
 COPY --from=builder /app/build /usr/share/nginx/html
 
+# Copiar el archivo de configuración de Nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 # Exponer el puerto 80
 EXPOSE 80
 
 # Comando para ejecutar nginx
 CMD ["nginx", "-g", "daemon off;"]
+
+
+--- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\frontend\nginx.conf ---
+server {
+    listen 80;
+
+    # Ruta para servir los archivos estáticos del frontend
+    location / {
+        root /usr/share/nginx/html;
+        try_files $uri /index.html;
+    }
+
+    # Ruta para redirigir las solicitudes de la API al backend
+    location /api/ {
+        proxy_pass http://daw-backend:8081/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+
+        # Permitir CORS desde el frontend
+        add_header 'Access-Control-Allow-Origin' 'http://localhost:3000' always;
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS' always;
+        add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, X-Requested-With' always;
+        add_header 'Access-Control-Allow-Credentials' 'true' always;
+
+        # Manejar las solicitudes OPTIONS (pre-flight requests)
+        if ($request_method = OPTIONS) {
+            return 204;
+        }
+    }
+}
 
 
 --- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\frontend\package.json ---
@@ -410,22 +446,32 @@ import React, { useEffect, useState } from 'react';
 import authService from '../services/authService';
 import { Typography, Container } from '@mui/material';
 
+/**
+ * Componente que muestra el Dashboard, una pantalla protegida que solo es accesible para usuarios autenticados.
+ */
 const Dashboard = () => {
+    // Estado para almacenar el mensaje de la API
     const [message, setMessage] = useState('');
 
+    /**
+     * useEffect que se ejecuta una vez al montar el componente.
+     * Llama a la función fetchProtectedData para obtener el contenido restringido de la API.
+     */
     useEffect(() => {
         const fetchProtectedData = async () => {
             try {
+                // Llamada a la API protegida para obtener un mensaje
                 const response = await authService.axiosInstance.get('auth/protected');
-                setMessage(response.data.message);
+                setMessage(response.data.message); // Guarda el mensaje recibido en el estado
             } catch (err) {
-                console.error(err);
+                console.error(err); // Muestra cualquier error en la consola
             }
         };
 
-        fetchProtectedData();
+        fetchProtectedData(); // Ejecuta la función de obtención de datos
     }, []);
 
+    // Renderiza el contenido del Dashboard, mostrando el mensaje protegido recibido de la API
     return (
         <Container>
             <Typography variant="h4" sx={{ mt: 4 }}>
@@ -477,6 +523,7 @@ const Login = () => {
 
             // Guardar el token en localStorage
             localStorage.setItem('token', token);
+            console.log("Token guardado en localStorage:", localStorage.getItem('token')); // Verifica que el token se guarda
             setSuccess('Inicio de sesión exitoso.');
 
             // Redirigir o realizar otras acciones después del login
@@ -563,47 +610,219 @@ import React, { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
+/**
+ * Componente de ruta protegida que redirige a la página de inicio de sesión si el usuario no está autenticado.
+ *
+ * @param {ReactNode} children - Componentes hijos que se mostrarán si el usuario está autenticado.
+ */
 const PrivateRoute = ({ children }) => {
+    // Extrae el token de autenticación del contexto
     const { authToken } = useContext(AuthContext);
 
+    // Si el usuario está autenticado, renderiza los hijos; de lo contrario, redirige a /login
     return authToken ? children : <Navigate to="/login" />;
 };
 
 export default PrivateRoute;
 
 
+--- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\frontend\src\components\Register.js ---
+// src/components/Register.js
+import React, { useState } from 'react';
+import {
+    Container,
+    TextField,
+    Button,
+    Typography,
+    Box,
+    Alert,
+} from '@mui/material';
+import authService from '../services/authService';
+
+/**
+ * Componente de registro que permite a los usuarios crear una nueva cuenta.
+ */
+const Register = () => {
+    // Estados para los datos del formulario
+    const [nombre, setNombre] = useState('');
+    const [apellidos, setApellidos] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');      // Estado para mensajes de error
+    const [success, setSuccess] = useState('');  // Estado para mensajes de éxito
+
+    /**
+     * Maneja el envío del formulario de registro, validando los campos y enviando los datos a la API.
+     *
+     * @param {Event} e - Evento de envío del formulario.
+     */
+    const handleSubmit = async (e) => {
+        e.preventDefault(); // Previene el comportamiento por defecto del formulario
+        setError(''); // Limpia cualquier mensaje de error anterior
+        setSuccess(''); // Limpia cualquier mensaje de éxito anterior
+
+        // Validación básica: todos los campos deben estar completos
+        if (!nombre || !apellidos || !email || !password) {
+            setError('Por favor, completa todos los campos.');
+            return;
+        }
+
+        try {
+            // Llamada al servicio de registro de usuario
+            const response = await authService.register(nombre, apellidos, email, password);
+            setSuccess(response.data); // Guarda el mensaje de éxito en el estado
+            // Limpia los campos del formulario
+            setNombre('');
+            setApellidos('');
+            setEmail('');
+            setPassword('');
+        } catch (err) {
+            // Muestra un mensaje de error en caso de fallo
+            setError('Ocurrió un error. Por favor, intenta nuevamente.');
+        }
+    };
+
+    // Renderiza el formulario de registro
+    return (
+        <Container maxWidth="sm">
+            <Box
+                sx={{
+                    marginTop: 8,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}
+            >
+                <Typography component="h1" variant="h5">
+                    Registrarse
+                </Typography>
+                {/* Muestra mensaje de error si existe */}
+                {error && (
+                    <Alert severity="error" sx={{ width: '100%', mt: 2 }}>
+                        {error}
+                    </Alert>
+                )}
+                {/* Muestra mensaje de éxito si existe */}
+                {success && (
+                    <Alert severity="success" sx={{ width: '100%', mt: 2 }}>
+                        {success}
+                    </Alert>
+                )}
+                {/* Formulario de registro */}
+                <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, width: '100%' }}>
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="nombre"
+                        label="Nombre"
+                        name="nombre"
+                        autoComplete="nombre"
+                        autoFocus
+                        value={nombre}
+                        onChange={(e) => setNombre(e.target.value)}
+                    />
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="apellidos"
+                        label="Apellidos"
+                        name="apellidos"
+                        autoComplete="apellidos"
+                        value={apellidos}
+                        onChange={(e) => setApellidos(e.target.value)}
+                    />
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="email"
+                        label="Correo Electrónico"
+                        name="email"
+                        autoComplete="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="password"
+                        label="Contraseña"
+                        type="password"
+                        id="password"
+                        autoComplete="current-password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        sx={{ mt: 3, mb: 2 }}
+                    >
+                        Registrarse
+                    </Button>
+                </Box>
+            </Box>
+        </Container>
+    );
+};
+
+export default Register;
+
+
 --- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\frontend\src\context\AuthContext.js ---
 // src/context/AuthContext.js
 import React, { createContext, useState, useEffect } from 'react';
-import * as jwt_decode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode'; // Importa la función usando una importación nombrada
 
+// Crea el contexto de autenticación
 export const AuthContext = createContext();
 
+// Componente proveedor de autenticación
 export const AuthProvider = ({ children }) => {
+    // Estado para almacenar el token JWT. Se inicializa con el valor en localStorage (si existe)
     const [authToken, setAuthToken] = useState(() => localStorage.getItem('token'));
-    const [user, setUser] = useState(() => (authToken ? jwt_decode(authToken) : null));
 
+    // Estado para almacenar los datos del usuario decodificados del token JWT
+    const [user, setUser] = useState(() => (
+        authToken ? jwtDecode(authToken) : null // Decodifica el token solo si existe
+    ));
+
+    // useEffect para actualizar el estado del usuario cada vez que el authToken cambie
     useEffect(() => {
         if (authToken) {
-            setUser(jwt_decode(authToken));
+            // Si hay un token, decodifica y establece los datos del usuario
+            setUser(jwtDecode(authToken));
         } else {
+            // Si no hay token, establece el usuario como null
             setUser(null);
         }
-    }, [authToken]);
+    }, [authToken]); // Dependencia en authToken: ejecuta el efecto cuando authToken cambia
 
+    // Función para manejar el inicio de sesión
     const login = (token) => {
+        // Guarda el token en localStorage
         localStorage.setItem('token', token);
+        // Actualiza el estado con el nuevo token, lo que también activará el useEffect anterior
         setAuthToken(token);
     };
 
+    // Función para manejar el cierre de sesión
     const logout = () => {
+        // Elimina el token del localStorage
         localStorage.removeItem('token');
+        // Establece authToken como null, lo que también activará el useEffect y limpiará el usuario
         setAuthToken(null);
     };
 
+    // Retorna el proveedor del contexto con los valores y funciones necesarias
     return (
         <AuthContext.Provider value={{ authToken, user, login, logout }}>
-            {children}
+            {children} {/* Renderiza los componentes hijos que consuman este contexto */}
         </AuthContext.Provider>
     );
 };
@@ -613,39 +832,80 @@ export const AuthProvider = ({ children }) => {
 // src/services/authService.js
 import axios from 'axios';
 
-const API_URL = '/api/auth/';
+// URL base de la API
+const API_URL = 'http://localhost:8081/api/auth/';
 
-const login = (email, password) => {
-    return axios.post(`${API_URL}login`, { email, password });
+/**
+ * Función para iniciar sesión.
+ * Realiza una solicitud POST al endpoint de login.
+ *
+ * @param {string} email - Correo electrónico del usuario.
+ * @param {string} password - Contraseña del usuario.
+ * @returns {Promise} - Promesa con la respuesta de la API.
+ */
+const login = async (email, password) => {
+    console.log("URL de la solicitud de login:", `${API_URL}login`);
+    console.log("Datos enviados:", { email, password });
+    try {
+        const response = await axios.post(`${API_URL}login`, { email, password });
+        console.log("Respuesta recibida:", response);
+
+        return response;
+    } catch (error) {
+        console.error("Error en login:", error);
+        throw error;
+    }
 };
 
+
+
+/**
+ * Función para registrar un nuevo usuario.
+ * Realiza una solicitud POST al endpoint de registro.
+ *
+ * @param {string} nombre - Nombre del usuario.
+ * @param {string} apellidos - Apellidos del usuario.
+ * @param {string} email - Correo electrónico del usuario.
+ * @param {string} password - Contraseña del usuario.
+ * @returns {Promise} - Promesa con la respuesta de la API.
+ */
 const register = (nombre, apellidos, email, password) => {
     return axios.post(`${API_URL}register`, { nombre, apellidos, email, password });
 };
 
+/**
+ * Función para cerrar sesión.
+ * Elimina el token del localStorage.
+ */
 const logout = () => {
     localStorage.removeItem('token');
 };
 
-// Crear una instancia de axios
+// Crear una instancia de axios para las solicitudes a la API protegida
 const axiosInstance = axios.create({
-    baseURL: '/api/',
+    baseURL: API_URL,
+    headers: {
+        'Content-Type': 'application/json',
+    },
 });
+
 
 // Añadir un interceptor para incluir el token en las solicitudes
 axiosInstance.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
-        if (token) {
-            config.headers['Authorization'] = 'Bearer ' + token;
+        if (token && !config.url.includes('/auth/login')) { // Evita el token en /auth/login
+            config.headers['Authorization'] = `Bearer ${token}`;
         }
         return config;
     },
-    (error) => {
-        return Promise.reject(error);
-    }
+    (error) => Promise.reject(error)
 );
 
+
+
+
+// Exportar los servicios de autenticación
 const authService = {
     login,
     register,
