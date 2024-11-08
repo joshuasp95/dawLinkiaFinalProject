@@ -2,15 +2,17 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/Login';
+import Register from './components/Register';
 import PrivateRoute from './components/PrivateRoute';
-import Dashboard from './components/Dashboard'; // Asegúrate de crear este componente
+import Dashboard from './components/Dashboard';
+
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
-        {/* Ruta protegida */}
+        <Route path="/register" element={<Register />} /> {/* Ruta de registro */}
         <Route
           path="/dashboard"
           element={
@@ -19,7 +21,6 @@ function App() {
             </PrivateRoute>
           }
         />
-        {/* Ruta por defecto */}
         <Route path="*" element={<Login />} />
       </Routes>
     </Router>
