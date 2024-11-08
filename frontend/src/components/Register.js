@@ -9,11 +9,13 @@ import {
     Alert,
 } from '@mui/material';
 import authService from '../services/authService';
+import { useNavigate } from "react-router-dom";
 
 /**
  * Componente de registro que permite a los usuarios crear una nueva cuenta.
  */
 const Register = () => {
+    const navigate = useNavigate();
     // Estados para los datos del formulario
     const [nombre, setNombre] = useState('');
     const [apellidos, setApellidos] = useState('');
@@ -47,6 +49,7 @@ const Register = () => {
             setApellidos('');
             setEmail('');
             setPassword('');
+            navigate('/login');
         } catch (err) {
             // Muestra un mensaje de error en caso de fallo
             setError('Ocurrió un error. Por favor, intenta nuevamente.');
