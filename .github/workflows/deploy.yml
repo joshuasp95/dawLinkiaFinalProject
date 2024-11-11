@@ -1,0 +1,24 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      #clona el repositorio
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      #configurar autenticacion
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_KEY }}
+      #ejecutar el script para actualizar la app
+      - name: Deploy to VPS
+        run: |
+          ssh -o StrictHostKeyChecking=no joshualinux@217.71.207.46 'bash ~/dawLinkiaFinalProject/actualizarDawLinkiaFinalProject.sh'
