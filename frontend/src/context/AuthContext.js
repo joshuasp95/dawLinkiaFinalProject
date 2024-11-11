@@ -1,6 +1,6 @@
 // src/context/AuthContext.js
 import React, { createContext, useState, useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode'; // Importa la función usando una importación nombrada
+import jwtDecode from 'jwt-decode'; // Importa la función usando una importación nombrada
 
 // Crea el contexto de autenticación
 export const AuthContext = createContext();
