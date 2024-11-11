@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // URL base de la API
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8081/api/auth/';
+const API_URL = process.env.REACT_APP_API_URL || '/api/auth/';
 console.log('API_URL:', API_URL); 
 
 /**
