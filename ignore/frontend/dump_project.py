@@ -1,7 +1,7 @@
 import os
 
 # Ruta del proyecto
-project_path = 'C:\\Users\\joshu\\dev\\DAW\\Proyecto_Final\\frontend'
+project_path = '/home/theguardian/GIT/dawLinkiaFinalProject/frontend'
 
 # Definición de extensiones a excluir (ajustadas para un proyecto React)
 excluded_extensions = (
@@ -25,7 +25,7 @@ excluded_directories = (
 )
 
 # Archivo de salida
-output_file = 'ignore\\frontend\\project_contents.txt'
+output_file = '/home/theguardian/GIT/dawLinkiaFinalProject/ignore/frontend/project_contents.txt'
 
 with open(output_file, 'w', encoding='utf-8') as outfile:
     # Recorrer el directorio

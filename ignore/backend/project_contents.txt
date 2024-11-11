@@ -1,89 +1,4 @@
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\.gitignore ---
-# Archivos de compilación de Maven
-/backend/target/
-
-# Archivos de configuración local que no deben estar en el repositorio
-/backend/src/main/resources/application.properties
-
-# Archivos de IDE (IntelliJ, Eclipse, VS Code)
-/backend/.idea/
-/backend/*.iml
-/backend/*.ipr
-/backend/*.iws
-/frontend/.idea/
-/frontend/*.iml
-/frontend/*.ipr
-/frontend/*.iws
-
-# Archivos de logs
-*.log
-
-# Directorios de dependencias de Node.js si tienes un frontend
-/frontend/node_modules/
-
-# Archivos de entorno
-.env
-
-# Otros archivos generados
-*.class
-*.jar
-*.war
-*.ear
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\docker-compose.yml ---
-version: '3.8'
-
-services:
-  daw-db:
-    image: mysql:8.0
-    container_name: daw-db
-    restart: always
-    environment:
-      MYSQL_DATABASE: 'dawFinalProject'
-      MYSQL_USER: 'root'
-      MYSQL_PASSWORD: 'usopp12*'
-      MYSQL_ROOT_PASSWORD: 'usopp12*'
-    ports:
-      - '3306:3306'  # Producción usa el puerto estándar
-    volumes:
-      - my-db:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-
-  daw-backend:
-    build: ./backend/dawFinalProject
-    container_name: daw-backend
-    ports:
-      - '8081:8081'
-    depends_on:
-      daw-db:
-        condition: service_healthy
-    environment:
-      SPRING_PROFILES_ACTIVE: prod
-      SPRING_DATASOURCE_URL: jdbc:mysql://daw-db:3306/dawFinalProject?useSSL=false&serverTimezone=UTC
-      SPRING_DATASOURCE_USERNAME: 'root'
-      SPRING_DATASOURCE_PASSWORD: 'usopp12*'
-      SPRING_FLYWAY_PASSWORD: 'usopp12*'
-
-volumes:
-  my-db:
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\.vscode\settings.json ---
-{
-    "java.configuration.updateBuildConfiguration": "automatic"
-}
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\.gitattributes ---
-/mvnw text eol=lf
-*.cmd text eol=crlf
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\.gitignore ---
+--- Contenido de /home/theguardian/GIT/dawLinkiaFinalProject/backend/dawFinalProject/.gitignore ---
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
@@ -119,69 +34,12 @@ build/
 .vscode/
 
 
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\Dockerfile ---
-# Usa una imagen de Maven para construir el proyecto
-FROM maven:3.8.5-openjdk-17 AS builder
-
-# Establece el directorio de trabajo
-WORKDIR /app
-
-# Copia el pom.xml y el directorio de código fuente al contenedor
-COPY pom.xml .
-COPY src ./src
-
-# Ejecuta el comando para construir el proyecto sin Flyway
-RUN mvn clean install -Dspring.flyway.enabled=false
-
-# Usa una imagen de OpenJDK para ejecutar el jar construido
-FROM openjdk:17-jdk-alpine
-
-# Copia el jar construido desde el contenedor de Maven
-COPY --from=builder /app/target/dawFinalProject-0.0.1-SNAPSHOT.jar app.jar
-
-# Expone el puerto de la aplicación
-EXPOSE 8081
-
-# Comando para ejecutar la aplicación
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+--- Contenido de /home/theguardian/GIT/dawLinkiaFinalProject/backend/dawFinalProject/.gitattributes ---
+/mvnw text eol=lf
+*.cmd text eol=crlf
 
 
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\HELP.md ---
-# Getting Started
-
-### Reference Documentation
-For further reference, please consider the following sections:
-
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/3.3.5/maven-plugin)
-* [Create an OCI image](https://docs.spring.io/spring-boot/3.3.5/maven-plugin/build-image.html)
-* [Spring Web](https://docs.spring.io/spring-boot/3.3.5/reference/web/servlet.html)
-* [Spring Security](https://docs.spring.io/spring-boot/3.3.5/reference/web/spring-security.html)
-* [Spring Data JPA](https://docs.spring.io/spring-boot/3.3.5/reference/data/sql.html#data.sql.jpa-and-spring-data)
-* [Flyway Migration](https://docs.spring.io/spring-boot/3.3.5/how-to/data-initialization.html#howto.data-initialization.migration-tool.flyway)
-
-### Guides
-The following guides illustrate how to use some features concretely:
-
-* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
-* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
-* [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
-* [Securing a Web Application](https://spring.io/guides/gs/securing-web/)
-* [Spring Boot and OAuth2](https://spring.io/guides/tutorials/spring-boot-oauth2/)
-* [Authenticating a User with LDAP](https://spring.io/guides/gs/authenticating-ldap/)
-* [Accessing Data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
-* [Accessing data with MySQL](https://spring.io/guides/gs/accessing-data-mysql/)
-
-### Maven Parent overrides
-
-Due to Maven's design, elements are inherited from the parent POM to the project POM.
-While most of the inheritance is fine, it also inherits unwanted elements like `<license>` and `<developers>` from the parent.
-To prevent this, the project POM contains empty overrides for these elements.
-If you manually switch to a different parent and actually want the inheritance, you need to remove those overrides.
-
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\pom.xml ---
+--- Contenido de /home/theguardian/GIT/dawLinkiaFinalProject/backend/dawFinalProject/pom.xml ---
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -333,1223 +191,7 @@ If you manually switch to a different parent and actually want the inheritance, 
 </project>
 
 
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\java\com\daw\finalProject\DawFinalProjectApplication.java ---
-package com.daw.finalProject;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import com.daw.finalProject.model.Usuario;
-import com.daw.finalProject.service.UsuarioService;
-
-import lombok.extern.java.Log;
-
-@SpringBootApplication
-@Log
-public class DawFinalProjectApplication implements CommandLineRunner {
-
-	@Autowired
-	private UsuarioService usuarioService;
-
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-
-	public static void main(String[] args) {
-		SpringApplication.run(DawFinalProjectApplication.class, args);
-	}
-
-	@Override
-	public void run(String... args) throws Exception {
-		if (!usuarioService.validarExistenciaUsuarioByEmail("joshuasainz95@gmail.com")) {
-			Usuario admin = new Usuario();
-			admin.setNombre("Administrador");
-			admin.setApellidos("");
-			admin.setEmail("joshuasainz95@gmail.com");
-			// Codificamos la pass por seguridad
-			admin.setPassword(passwordEncoder.encode("linkia.2024"));
-			admin.setRol("ADMIN");
-			usuarioService.guardarUsuario(admin);
-			log.info("Usuario " + admin.getNombre() + " guardado correctamente en base de datos");
-
-		}
-
-	}
-}
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\java\com\daw\finalProject\configuration\OpenApiConfig.java ---
-package com.daw.finalProject.configuration;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Info;
-
-/**
- * Configuración personalizada para OpenAPI (Swagger).
- */
-@Configuration
-public class OpenApiConfig {
-
-    /**
-     * Define la configuración de OpenAPI para la documentación de la API.
-     *
-     * @return Instancia de OpenAPI configurada
-     */
-    @Bean
-    public OpenAPI customOpenAPI() {
-        return new OpenAPI()
-                .info(new Info()
-                        .title("API de Proyecto Final DAW")
-                        .version("1.0")
-                        .description("Documentación de la API para el Proyecto Final de DAW"));
-    }
-}
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\java\com\daw\finalProject\configuration\SecurityConfig.java ---
-package com.daw.finalProject.configuration;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import com.daw.finalProject.security.JwtAuthenticationFilter;
-
-@Configuration
-public class SecurityConfig {
-
-    // Servicio para obtener detalles de usuario
-    @SuppressWarnings("unused")
-    @Autowired
-    private UserDetailsService userDetailsService;
-
-    // Filtro para manejar JWT
-    @Autowired
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
-
-    /**
-     * Define las reglas de seguridad para las solicitudes HTTP.
-     *
-     * @param http Objeto HttpSecurity para configurar las reglas.
-     * @return SecurityFilterChain configurado.
-     * @throws Exception en caso de error de configuración.
-     */
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable) // Desactiva CSRF, en este caso las sesiones se guardan en JWT
-                // configuracion de peticiones http entrantes
-                .authorizeHttpRequests(authz -> {
-                    // para autenticacion se permiten solicitudes sin autenticarse
-                    authz.requestMatchers("/api/auth/**").permitAll()
-                            .anyRequest().authenticated();
-                })
-                // manejo de sesiones con politica stateless, es decir cada peticion necesita un
-                // JWT
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-        // Añadimos un filtro para validar el JWT antes de procesar la autenticacion
-        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
-    }
-
-    /**
-     * Configura el AuthenticationManager con el UserDetailsService y el
-     * PasswordEncoder.
-     *
-     * @param http               Objeto HttpSecurity
-     * @param passwordEncoder    Bean de PasswordEncoder
-     * @param userDetailsService Bean de UserDetailsService
-     * @return AuthenticationManager configurado
-     * @throws Exception En caso de errores durante la configuración
-     */
-    @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder passwordEncoder,
-            UserDetailsService userDetailsService) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = http
-                .getSharedObject(AuthenticationManagerBuilder.class);
-
-        authenticationManagerBuilder.userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder());
-        return authenticationManagerBuilder.build();
-
-    }
-
-    // Algoritmo usado para encriptar contraseñas
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-}
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\java\com\daw\finalProject\controller\AuthController.java ---
-package com.daw.finalProject.controller;
-
-import java.util.Collections;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.daw.finalProject.model.Usuario;
-import com.daw.finalProject.payload.AuthResponse;
-import com.daw.finalProject.payload.LoginRequest;
-import com.daw.finalProject.payload.RegistroRequest;
-import com.daw.finalProject.security.JwtUtil;
-import com.daw.finalProject.service.UsuarioService;
-
-import jakarta.validation.Valid;
-
-/**
- * Controlador que maneja las solicitudes de autenticación y registro.
- */
-@RestController
-@RequestMapping("/api/auth")
-public class AuthController {
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private UsuarioService usuarioService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private JwtUtil jwtUtil;
-
-    /**
-     * Endpoint para autenticar a un usuario y generar un token JWT.
-     *
-     * @param loginRequest Objeto que contiene las credenciales de login
-     * @return Respuesta que contiene el token JWT o un mensaje de error
-     */
-    @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        // validamos el cuerpo de la peticion y devolvemos el token
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-
-            String token = jwtUtil.generateToken(loginRequest.getEmail());
-
-            return ResponseEntity.ok(new AuthResponse(token));
-
-        } catch (BadCredentialsException ex) {
-            return ResponseEntity.status(401).body("credenciales no válidas");
-        }
-
-    }
-
-    /**
-     * Endpoint para registrar un nuevo usuario.
-     *
-     * @param registroRequest Objeto que contiene los datos de registro
-     * @return Respuesta que indica el éxito o error del registro
-     */
-    @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody RegistroRequest registroRequest) {
-
-        // Verificamos que el mail no existe en base de datos
-        if (usuarioService.validarExistenciaUsuarioByEmail(registroRequest.getEmail())) {
-            return ResponseEntity.badRequest().body("Error: El email ya existe!");
-        }
-
-        // Creamos el usuario con los datos proporcionados
-        Usuario usuario = new Usuario();
-        usuario.setNombre(registroRequest.getNombre());
-        usuario.setApellidos(registroRequest.getApellidos());
-        usuario.setEmail(registroRequest.getEmail());
-        usuario.setPassword(passwordEncoder.encode(registroRequest.getPassword()));
-        usuario.setRol("USER");
-
-        usuarioService.guardarUsuario(usuario);
-
-        return ResponseEntity.ok("Usuario registrado correctamente!");
-    }
-
-    /**
-     * Endpoint protegido para pruebas que requiere autenticación.
-     *
-     * @return Mensaje confirmando el acceso al recurso protegido
-     */
-    @GetMapping("/protected")
-    public ResponseEntity<?> getProtectedResource() {
-
-        return ResponseEntity.ok(Collections.singletonMap("message", "Estas viendo contenido restringido!"));
-    }
-}
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\java\com\daw\finalProject\exception\GlobalExceptionHandler.java ---
-package com.daw.finalProject.exception;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-/**
- * Manejador global de excepciones para capturar y manejar excepciones en toda
- * la aplicación.
- */
-@RestControllerAdvice
-public class GlobalExceptionHandler {
-
-    /**
-     * Maneja las excepciones de credenciales inválidas.
-     *
-     * @param ex Excepción BadCredentialsException
-     * @return Respuesta HTTP con estado 401 y mensaje de error
-     */
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<?> handleBadCredentialsException(BadCredentialsException ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales no válidas");
-    }
-
-    /**
-     * Maneja las excepciones cuando un usuario no es encontrado.
-     *
-     * @param ex Excepción UsernameNotFoundException
-     * @return Respuesta HTTP con estado 404 y mensaje de error
-     */
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<?> handleUsernameNotFoundException(UsernameNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-    }
-
-    /**
-     * Maneja las excepciones de validación con parametros de entrada en peticiones HTTP
-     *
-     * @param ex Excepción MethodArgumentNotValidException
-     * @return Respuesta HTTP con estado 400 y detalles de los errores de validación
-     */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        // Puede haber más de un parametro de entrada con errores asique iteramos todos y los agregamos al map
-        ex.getBindingResult().getFieldErrors()
-                .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
-        return ResponseEntity.badRequest().body(errors);
-    }
-
-    /**
-     * Maneja todas las demás excepciones no específicas.
-     *
-     * @param ex Excepción Exception
-     * @return Respuesta HTTP con estado 500 y mensaje de error genérico
-     */
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleGlobalException(Exception ex) {
-        ex.printStackTrace(); // Imprime la traza de la excepción para depuración
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocurrió un error inesperado");
-    }
-}
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\java\com\daw\finalProject\model\Usuario.java ---
-package com.daw.finalProject.model;
-
-import java.time.LocalDateTime;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Table;
-import lombok.Data;
-
-@Entity
-@Table(name = "usuario")
-@Data
-public class Usuario {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false)
-    private String nombre;
-
-    @Column(nullable = false)
-    private String apellidos;
-
-    @Column(nullable = false, unique = true)
-    private String email;
-
-    @Column(nullable = false)
-    private String password;
-
-    @Column(nullable = false)
-    private String rol;
-
-    @Column(name = "fecha_creacion", nullable = false, updatable = false)
-    private LocalDateTime fechaCreacion = LocalDateTime.now();
-
-    @Column(name = "fecha_modificacion", nullable = false)
-    private LocalDateTime fechaModificacion = LocalDateTime.now();
-
-    // antes de guardar en base de datos settear las fechas actuales
-    @PrePersist
-    protected void onCreate() {
-        fechaCreacion = LocalDateTime.now();
-        fechaModificacion = LocalDateTime.now();
-    }
-
-    // al actualizar la entidad guardar la fecha de modificacion actual en base de datos
-    @PreUpdate
-    protected void onUpdate() {
-        fechaModificacion = LocalDateTime.now();
-    }
-}
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\java\com\daw\finalProject\payload\AuthResponse.java ---
-package com.daw.finalProject.payload;
-
-import lombok.Data;
-
-/**
- * Clase para manejar las solicitudes de registro de usuarios.
- */
-@Data
-public class AuthResponse {
-
-    private String token; // Token JWT generado para el usuario autenticado
-
-    /**
-     * Constructor para AuthResponse.
-     *
-     * @param token Token JWT generado
-     */
-    public AuthResponse(String token) {
-        this.token = token;
-    }
-
-}
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\java\com\daw\finalProject\payload\LoginRequest.java ---
-package com.daw.finalProject.payload;
-
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
-
-/**
- * Clase para manejar las solicitudes de login de usuarios.
- */
-@Data // Genera getters y setters automáticamente
-public class LoginRequest {
-
-    // Email del usuario, debe ser válido y no puede estar vacío
-    @NotBlank(message = "El email es obligatorio")
-    @Email(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "El email debe ser válido")
-    private String email;
-
-    // Contraseña del usuario, no puede estar vacía
-    @NotBlank(message = "La contraseña es obligatoria")
-    private String password;
-}
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\java\com\daw\finalProject\payload\RegistroRequest.java ---
-package com.daw.finalProject.payload;
-
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-import lombok.Data;
-
-/**
- * Clase para manejar las solicitudes de registro de usuarios.
- */
-@Data // Genera getters y setters automáticamente
-public class RegistroRequest {
-
-    @NotBlank(message = "El nombre es obligatorio")
-    private String nombre;
-
-    @NotBlank(message = "Los apellidos son obligatorios")
-    private String apellidos;
-
-    @NotBlank(message = "El nombre es obligatorio")
-    @Email(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "El email debe ser válido")
-    private String email;
-
-    @NotBlank(message = "El nombre es obligatorio")
-    @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres")
-    private String password;
-
-}
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\java\com\daw\finalProject\repository\IUsuarioRepository.java ---
-package com.daw.finalProject.repository;
-
-import java.util.Optional;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-import com.daw.finalProject.model.Usuario;
-
-@Repository
-public interface IUsuarioRepository extends JpaRepository<Usuario, Long> {
-
-    /**
-     * Busca un usuario por su email.
-     *
-     * @param email Email del usuario a buscar
-     * @return Optional que contiene el usuario si se encuentra, o vacío si no
-     */
-    Optional<Usuario> findByEmail(String email);
-
-    Boolean existsByEmail(String email);
-
-}
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\java\com\daw\finalProject\security\JwtAuthenticationFilter.java ---
-package com.daw.finalProject.security;
-
-import java.io.IOException;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
-
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
-/**
- * Filtro de autenticación JWT que valida el token en cada solicitud.
- */
-@Component
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
-
-    // Servicio para gestionar el JWT
-    @Autowired
-    private JwtUtil jwtUtil;
-
-    // Servicio para cargar los usuarios de base de datos
-    @Autowired
-    private UserDetailsService userDetailsService;
-
-    /**
-     * Método que se ejecuta en cada solicitud para validar el token JWT.
-     *
-     * @param request     Solicitud HTTP entrante
-     * @param response    Respuesta HTTP
-     * @param filterChain Cadena de filtros
-     * @throws ServletException En caso de errores de servlet
-     * @throws IOException      En caso de errores de E/S
-     */
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
-
-        String header = request.getHeader("Authorization");
-        String token = null;
-        String mail = null;
-
-        // Veficar el encabezado correcto del JWT
-        if (header != null && header.startsWith("Bearer ")) {
-            token = header.substring(7); // extraemos el token sin el prefijo
-            mail = jwtUtil.extractUsername(token); // extraemos el mail del usuario
-        }
-
-        // si el usuario existe y no hay autenticacion previa
-        if (mail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            // obtenemos el usuario
-            UserDetails userDetails = userDetailsService.loadUserByUsername(mail);
-
-            // validamos el token
-            if (jwtUtil.validateToken(token, mail)) {
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(mail,
-                        null, userDetails.getAuthorities());
-                // detalles de solicitud
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                // se establece la autenticacion para la solicitud
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
-        }
-
-        filterChain.doFilter(request, response);
-
-    }
-
-}
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\java\com\daw\finalProject\security\JwtUtil.java ---
-package com.daw.finalProject.security;
-
-import java.util.Date;
-
-import javax.crypto.SecretKey;
-
-import org.springframework.stereotype.Component;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
-import lombok.extern.java.Log;
-
-@Component
-@Log
-public class JwtUtil {
-
-    private final SecretKey secretKey;
-
-    // tiempo de expiracion del token
-    private long jwtExpirationTimeInMs = 3600000;
-
-    public JwtUtil() {
-        this.secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
-    }
-
-    /**
-     * Genera un token JWT basado en el nombre de usuario.
-     *
-     * @param username Nombre de usuario (email) del usuario
-     * @return Token JWT generado
-     */
-    public String generateToken(String mail) {
-
-        return Jwts.builder()
-                .setSubject(mail)
-                // Fecha de emision del token
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationTimeInMs))
-                .signWith(secretKey)
-                .compact();
-    }
-
-    /**
-     * Extrae los claims del token JWT.
-     *
-     * @param token Token JWT
-     * @return claims de usuario extraído del token
-     */
-    public Claims extractClaims(String token) {
-        return Jwts.parserBuilder()
-                // clave secreta para validar el token
-                .setSigningKey(secretKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-
-    }
-
-    /**
-     * Valida si el token JWT es válido.
-     *
-     * @param authToken Token JWT a validar
-     * @param email     del usuari
-     * @return True si el token es válido, false en caso contrario
-     */
-    public boolean validateToken(String token, String email) {
-        final String username = extractUsername(token);
-        return (username.equals(email) && !isTokenExpired(token));
-    }
-
-    public String extractUsername(String token) {
-        return extractClaims(token).getSubject();
-    }
-
-    public boolean isTokenExpired(String token) {
-        return extractClaims(token).getExpiration().before(new Date());
-    }
-}
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\java\com\daw\finalProject\service\CustomerUserDetailService.java ---
-package com.daw.finalProject.service;
-
-import java.util.Collection;
-import java.util.Collections;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
-
-import com.daw.finalProject.model.Usuario;
-
-@Service
-public class CustomerUserDetailService implements UserDetailsService {
-
-    // servicio para gestión de usuarios
-    @Autowired
-    private UsuarioService usuarioService;
-
-    /**
-     * Obtiene las autoridades (roles) del usuario.
-     *
-     * @param usuario Objeto Usuario
-     * @return Colección de GrantedAuthority que representan los roles del usuario
-     */
-    private Collection<? extends GrantedAuthority> getAuthorities(Usuario usuario) {
-
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + usuario.getRol()));
-    }
-
-    /**
-     * Carga los detalles del usuario por su nombre de usuario (email).
-     *
-     * @param username Nombre de usuario (email) del usuario
-     * @return Objeto UserDetails que contiene los detalles del usuario
-     * @throws UsernameNotFoundException Si el usuario no se encuentra en la base de
-     *                                   datos
-     */
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Usuario usuario = usuarioService.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        "Usuario con mail: " + username + " no se encuentra en la base de datos"));
-
-        return new User(usuario.getEmail(), usuario.getPassword(), getAuthorities(usuario));
-    }
-
-}
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\java\com\daw\finalProject\service\UsuarioService.java ---
-package com.daw.finalProject.service;
-
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.daw.finalProject.model.Usuario;
-import com.daw.finalProject.repository.IUsuarioRepository;
-
-@Service
-public class UsuarioService {
-
-    @Autowired
-    private IUsuarioRepository usuarioRepository;
-
-    // Verificar que no existe el usuario
-    public Boolean validarExistenciaUsuarioByEmail(String email) {
-        return usuarioRepository.existsByEmail(email);
-    }
-
-    // Guardar usuario en base de datos
-    public Usuario guardarUsuario(Usuario usuario) {
-        return usuarioRepository.save(usuario);
-    }
-
-    public Optional<Usuario> findByEmail(String email) {
-        return usuarioRepository.findByEmail(email);
-    }
-}
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\resources\application-dev.properties ---
-# Perfil de Desarrollo
-
-# Nombre de la aplicación
-spring.application.name=dawFinalProject-Dev
-
-# Configuración de la Base de Datos para Desarrollo (MySQL Local)
-spring.datasource.url=jdbc:mysql://localhost:3309/dawFinalProject?useSSL=false&serverTimezone=UTC
-spring.datasource.username=root
-spring.datasource.password=usopp12*
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-
-# Configuración de JPA/Hibernate
-spring.jpa.hibernate.ddl-auto=none
-spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
-
-# Configuración de Flyway
-spring.flyway.enabled=true
-spring.flyway.locations=classpath:db/migration
-spring.flyway.url=jdbc:mysql://localhost:3309/dawFinalProject
-spring.flyway.user=root
-spring.flyway.password=usopp12*
-spring.flyway.baseline-on-migrate=true  
-
-# Puerto de la aplicación
-server.port=8081
-
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\resources\application-prod.properties ---
-# Perfil de Producción
-
-# Nombre de la aplicación
-spring.application.name=dawFinalProject-Prod
-
-# Configuración de la Base de Datos para Producción (Contenedor Docker)
-spring.datasource.url=jdbc:mysql://daw-db:3306/dawFinalProject?useSSL=false&serverTimezone=UTC
-spring.datasource.username=root
-spring.datasource.password=usopp12*
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-
-# Configuración de JPA/Hibernate
-spring.jpa.hibernate.ddl-auto=none
-spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
-
-# Configuración de Flyway
-spring.flyway.enabled=true
-spring.flyway.locations=classpath:db/migration
-spring.flyway.url=jdbc:mysql://daw-db:3306/dawFinalProject
-spring.flyway.user=root
-spring.flyway.password=usopp12*
-spring.flyway.baseline-on-migrate=true  
-
-# Puerto de la aplicación
-server.port=8081
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\resources\application.properties ---
-# application.properties
-
-# Perfil por defecto
-spring.profiles.active=dev
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\resources\db\migration\V1__Crear_tabla_usuario.sql ---
-CREATE TABLE usuario (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    apellidos VARCHAR(150) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    password VARCHAR(100) NOT NULL,
-    rol VARCHAR(50) NOT NULL,
-    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\test\java\com\daw\finalProject\DawFinalProjectApplicationTests.java ---
-package com.daw.finalProject;
-
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-
-@SpringBootTest
-class DawFinalProjectApplicationTests {
-
-	@Test
-	void contextLoads() {
-	}
-
-}
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\test\java\com\daw\finalProject\service\CustomerUserDetailServiceTest.java ---
-package com.daw.finalProject.service;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
-
-import java.util.Optional;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
-import com.daw.finalProject.model.Usuario;
-
-public class CustomerUserDetailServiceTest {
-
-    @Mock
-    private UsuarioService usuarioService;
-
-    @InjectMocks
-    private CustomerUserDetailService customerUserDetailService;
-
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
-
-    @Test
-    public void loadUserByUsername_UserExists_ReturnsUserDetails() {
-        // Configurar el comportamiento del mock
-        Usuario usuario = new Usuario();
-        usuario.setEmail("test@example.com");
-        usuario.setPassword("password");
-        usuario.setRol("USER");
-
-        when(usuarioService.findByEmail("test@example.com")).thenReturn(Optional.of(usuario));
-
-        // Llamar al método a probar
-        UserDetails userDetails = customerUserDetailService.loadUserByUsername("test@example.com");
-
-        // Verificar el resultado
-        assertNotNull(userDetails);
-        assertEquals("test@example.com", userDetails.getUsername());
-        assertEquals("password", userDetails.getPassword());
-        assertTrue(userDetails.getAuthorities().stream()
-                .anyMatch(auth -> auth.getAuthority().equals("ROLE_USER")));
-    }
-
-    @Test
-    public void loadUserByUsername_UserDoesNotExist_ThrowsException() {
-        // Configurar el comportamiento del mock
-        when(usuarioService.findByEmail("nonexistent@example.com")).thenReturn(Optional.empty());
-
-        // Llamar al método a probar y esperar una excepción
-        assertThrows(UsernameNotFoundException.class, () -> {
-            customerUserDetailService.loadUserByUsername("nonexistent@example.com");
-        });
-    }
-}
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\ignore\dump_project.py ---
-import os
-
-# Ruta del proyecto
-project_path = 'C:\\Users\\joshu\\dev\\DAW\\Proyecto_Final'
-
-# Definición de extensiones a excluir
-excluded_extensions = (
-    '.class',
-    '.jar',
-    '.war',
-    '.zip',
-    '.tar.gz',
-    '.env',
-    '.log',
-    '.tmp',
-    '.cmd',
-    'mvnw'
-)
-
-# Definición de directorios a excluir
-excluded_directories = (
-    'target',
-    'generated-sources',
-    'generated-test-sources',
-    '.git',  # Si quieres excluir el directorio .git también
-    '.mvn',  # Para excluir el directorio de Maven
-)
-
-
-# Archivo de salida
-output_file = 'ignore\\project_contents.txt'
-
-with open(output_file, 'w', encoding='utf-8') as outfile:
-    # Recorrer el directorio
-    for root, dirs, files in os.walk(project_path):
-        # Excluir directorios no deseados
-        dirs[:] = [d for d in dirs if d not in excluded_directories]
-        for file in files:
-            # Excluir archivos que tengan las extensiones especificadas
-            if not file.endswith(excluded_extensions):
-                file_path = os.path.join(root, file)
-                # Título del archivo
-                outfile.write(f'--- Contenido de {file_path} ---\n')
-                try:
-                    with open(file_path, 'r', encoding='utf-8') as infile:
-                        content = infile.read()
-                        # Añadir el contenido del archivo
-                        outfile.write(content + '\n\n')
-                except Exception as e:
-                    outfile.write(f'Error al leer {file_path}: {str(e)}\n\n')
-
-print(f'Contenido de los archivos volcado en {output_file}')
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\ignore\projectStructure.md ---
-.
-├── backend
-│   ├── dawFinalProject
-│   │   ├── Dockerfile
-│   │   ├── HELP.md
-│   │   ├── mvnw
-│   │   ├── mvnw.cmd
-│   │   ├── pom.xml
-│   │   ├── src
-│   │   │   ├── main
-│   │   │   │   ├── java
-│   │   │   │   │   └── com
-│   │   │   │   │       └── daw
-│   │   │   │   │           └── finalProject
-│   │   │   │   │               ├── DawFinalProjectApplication.java
-│   │   │   │   │               ├── configuration
-│   │   │   │   │               │   ├── OpenApiConfig.java
-│   │   │   │   │               │   └── SecurityConfig.java
-│   │   │   │   │               ├── controller
-│   │   │   │   │               │   └── AuthController.java
-│   │   │   │   │               ├── exception
-│   │   │   │   │               │   └── GlobalExceptionHandler.java
-│   │   │   │   │               ├── model
-│   │   │   │   │               │   └── Usuario.java
-│   │   │   │   │               ├── payload
-│   │   │   │   │               │   ├── AuthResponse.java
-│   │   │   │   │               │   ├── LoginRequest.java
-│   │   │   │   │               │   └── RegistroRequest.java
-│   │   │   │   │               ├── repository
-│   │   │   │   │               │   └── IUsuarioRepository.java
-│   │   │   │   │               ├── security
-│   │   │   │   │               │   ├── JwtAuthenticationFilter.java
-│   │   │   │   │               │   └── JwtUtil.java
-│   │   │   │   │               └── service
-│   │   │   │   │                   ├── CustomerUserDetailService.java
-│   │   │   │   │                   └── UsuarioService.java
-│   │   │   │   └── resources
-│   │   │   │       ├── application.properties
-│   │   │   │       ├── db
-│   │   │   │       │   └── migration
-│   │   │   │       │       └── V1__Crear_tabla_usuario.sql
-│   │   │   │       ├── static
-│   │   │   │       └── templates
-│   │   │   └── test
-│   │   │       └── java
-│   │   │           └── com
-│   │   │               └── daw
-│   │   │                   └── finalProject
-│   │   │                       ├── DawFinalProjectApplicationTests.java
-│   │   │                       └── service
-│   │   │                           └── CustomerUserDetailServiceTest.java
-│   │   └── target
-│   │       ├── classes
-│   │       │   ├── application.properties
-│   │       │   ├── com
-│   │       │   │   └── daw
-│   │       │   │       └── finalProject
-│   │       │   │           ├── DawFinalProjectApplication.class
-│   │       │   │           ├── configuration
-│   │       │   │           │   ├── OpenApiConfig.class
-│   │       │   │           │   └── SecurityConfig.class
-│   │       │   │           ├── controller
-│   │       │   │           │   └── AuthController.class
-│   │       │   │           ├── exception
-│   │       │   │           │   └── GlobalExceptionHandler.class
-│   │       │   │           ├── model
-│   │       │   │           │   └── Usuario.class
-│   │       │   │           ├── payload
-│   │       │   │           │   ├── AuthResponse.class
-│   │       │   │           │   ├── LoginRequest.class
-│   │       │   │           │   └── RegistroRequest.class
-│   │       │   │           ├── repository
-│   │       │   │           │   └── IUsuarioRepository.class
-│   │       │   │           ├── security
-│   │       │   │           │   ├── JwtAuthenticationFilter.class
-│   │       │   │           │   └── JwtUtil.class
-│   │       │   │           └── service
-│   │       │   │               ├── CustomerUserDetailService.class
-│   │       │   │               └── UsuarioService.class
-│   │       │   └── db
-│   │       │       └── migration
-│   │       │           └── V1__Crear_tabla_usuario.sql
-│   │       ├── generated-sources
-│   │       │   └── annotations
-│   │       ├── generated-test-sources
-│   │       │   └── test-annotations
-│   │       ├── maven-status
-│   │       │   └── maven-compiler-plugin
-│   │       │       ├── compile
-│   │       │       │   └── default-compile
-│   │       │       │       ├── createdFiles.lst
-│   │       │       │       └── inputFiles.lst
-│   │       │       └── testCompile
-│   │       │           └── default-testCompile
-│   │       │               ├── createdFiles.lst
-│   │       │               └── inputFiles.lst
-│   │       ├── surefire-reports
-│   │       │   ├── TEST-com.daw.finalProject.DawFinalProjectApplicationTests.xml
-│   │       │   └── com.daw.finalProject.DawFinalProjectApplicationTests.txt
-│   │       └── test-classes
-│   │           └── com
-│   │               └── daw
-│   │                   └── finalProject
-│   │                       ├── DawFinalProjectApplicationTests.class
-│   │                       └── service
-│   │                           └── CustomerUserDetailServiceTest.class
-│   └── dawFinalProject.zip
-├── docker-compose.yml
-├── frontend
-└── ignore
-    ├── dump_project.py
-    ├── projectStructure.md
-    └── project_contents.txt
-
-60 directories, 52 files
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\ignore\project_contents.txt ---
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\.gitignore ---
-# Archivos de compilación de Maven
-/backend/target/
-
-# Archivos de configuración local que no deben estar en el repositorio
-/backend/src/main/resources/application.properties
-
-# Archivos de IDE (IntelliJ, Eclipse, VS Code)
-/backend/.idea/
-/backend/*.iml
-/backend/*.ipr
-/backend/*.iws
-/frontend/.idea/
-/frontend/*.iml
-/frontend/*.ipr
-/frontend/*.iws
-
-# Archivos de logs
-*.log
-
-# Directorios de dependencias de Node.js si tienes un frontend
-/frontend/node_modules/
-
-# Archivos de entorno
-.env
-
-# Otros archivos generados
-*.class
-*.jar
-*.war
-*.ear
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\docker-compose.yml ---
-version: '3.8'
-
-services:
-  daw-db:
-    image: mysql:8.0
-    container_name: daw-db
-    restart: always
-    environment:
-      MYSQL_DATABASE: 'dawFinalProject'
-      MYSQL_USER: 'root'
-      MYSQL_PASSWORD: 'usopp12*'
-      MYSQL_ROOT_PASSWORD: 'usopp12*'
-    ports:
-      - '3306:3306'  # Producción usa el puerto estándar
-    volumes:
-      - my-db:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-
-  daw-backend:
-    build: ./backend/dawFinalProject
-    container_name: daw-backend
-    ports:
-      - '8081:8081'
-    depends_on:
-      daw-db:
-        condition: service_healthy
-    environment:
-      SPRING_PROFILES_ACTIVE: prod
-      SPRING_DATASOURCE_URL: jdbc:mysql://daw-db:3306/dawFinalProject?useSSL=false&serverTimezone=UTC
-      SPRING_DATASOURCE_USERNAME: 'root'
-      SPRING_DATASOURCE_PASSWORD: 'usopp12*'
-      SPRING_FLYWAY_PASSWORD: 'usopp12*'
-
-volumes:
-  my-db:
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\.vscode\settings.json ---
-{
-    "java.configuration.updateBuildConfiguration": "automatic"
-}
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\.gitattributes ---
-/mvnw text eol=lf
-*.cmd text eol=crlf
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\.gitignore ---
-HELP.md
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
-
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
-.vscode/
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\Dockerfile ---
+--- Contenido de /home/theguardian/GIT/dawLinkiaFinalProject/backend/dawFinalProject/Dockerfile ---
 # Usa una imagen de Maven para construir el proyecto
 FROM maven:3.8.5-openjdk-17 AS builder
 
@@ -1561,7 +203,7 @@ COPY pom.xml .
 COPY src ./src
 
 # Ejecuta el comando para construir el proyecto sin Flyway
-RUN mvn clean install -Dspring.flyway.enabled=false
+RUN mvn clean install -Dspring.flyway.enabled=false -Dmaven.test.skip=true
 
 # Usa una imagen de OpenJDK para ejecutar el jar construido
 FROM openjdk:17-jdk-alpine
@@ -1569,201 +211,98 @@ FROM openjdk:17-jdk-alpine
 # Copia el jar construido desde el contenedor de Maven
 COPY --from=builder /app/target/dawFinalProject-0.0.1-SNAPSHOT.jar app.jar
 
-# Expone el puerto de la aplicación
-EXPOSE 8081
+# Exponer el puerto de la aplicación y el puerto de depuración
+EXPOSE 8081 5005
 
-# Comando para ejecutar la aplicación
-ENTRYPOINT ["java", "-jar", "/app.jar"]
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\HELP.md ---
-# Getting Started
-
-### Reference Documentation
-For further reference, please consider the following sections:
-
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/3.3.5/maven-plugin)
-* [Create an OCI image](https://docs.spring.io/spring-boot/3.3.5/maven-plugin/build-image.html)
-* [Spring Web](https://docs.spring.io/spring-boot/3.3.5/reference/web/servlet.html)
-* [Spring Security](https://docs.spring.io/spring-boot/3.3.5/reference/web/spring-security.html)
-* [Spring Data JPA](https://docs.spring.io/spring-boot/3.3.5/reference/data/sql.html#data.sql.jpa-and-spring-data)
-* [Flyway Migration](https://docs.spring.io/spring-boot/3.3.5/how-to/data-initialization.html#howto.data-initialization.migration-tool.flyway)
-
-### Guides
-The following guides illustrate how to use some features concretely:
-
-* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
-* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
-* [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
-* [Securing a Web Application](https://spring.io/guides/gs/securing-web/)
-* [Spring Boot and OAuth2](https://spring.io/guides/tutorials/spring-boot-oauth2/)
-* [Authenticating a User with LDAP](https://spring.io/guides/gs/authenticating-ldap/)
-* [Accessing Data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
-* [Accessing data with MySQL](https://spring.io/guides/gs/accessing-data-mysql/)
-
-### Maven Parent overrides
-
-Due to Maven's design, elements are inherited from the parent POM to the project POM.
-While most of the inheritance is fine, it also inherits unwanted elements like `<license>` and `<developers>` from the parent.
-To prevent this, the project POM contains empty overrides for these elements.
-If you manually switch to a different parent and actually want the inheritance, you need to remove those overrides.
+# Comando para ejecutar la aplicación con opciones de depuración
+ENTRYPOINT ["java","-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005","-jar","/app.jar"]
 
 
+--- Contenido de /home/theguardian/GIT/dawLinkiaFinalProject/backend/dawFinalProject/src/test/java/com/daw/finalProject/DawFinalProjectApplicationTests.java ---
+package com.daw.finalProject;
 
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\pom.xml ---
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.3.5</version>
-		<relativePath/>
-		<!-- lookup parent from repository -->
-	</parent>
-	<groupId>com.daw.finalProject</groupId>
-	<artifactId>dawFinalProject</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>dawFinalProject</name>
-	<description>Final Project of DAW</description>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
-	<properties>
-		<java.version>17</java.version>
-	</properties>
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-mysql</artifactId>
-		</dependency>
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
-		<dependency>
-			<groupId>com.mysql</groupId>
-			<artifactId>mysql-connector-j</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-api</artifactId>
-			<version>0.11.5</version>
-		</dependency>
-		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-impl</artifactId>
-			<version>0.11.5</version>			<!-- Asegúrate de que la versión sea la que necesitas -->
-		</dependency>
+@SpringBootTest
+class DawFinalProjectApplicationTests {
 
-		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-jackson</artifactId>
-			<version>0.11.5</version>
-		</dependency>
+	@Test
+	void contextLoads() {
+	}
 
-		<dependency>
-			<groupId>jakarta.validation</groupId>
-			<artifactId>jakarta.validation-api</artifactId>
-			<version>3.1.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-			<version>2.0.4</version>
-		</dependency>
+}
 
 
-	</dependencies>
+--- Contenido de /home/theguardian/GIT/dawLinkiaFinalProject/backend/dawFinalProject/src/test/java/com/daw/finalProject/service/CustomerUserDetailServiceTest.java ---
+package com.daw.finalProject.service;
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.flywaydb</groupId>
-				<artifactId>flyway-maven-plugin</artifactId>
-				<version>10.10.0</version>
-				<configuration>
-					<url>${flyway.url}</url>
-					<user>${flyway.user}</user>
-					<password>${flyway.password}</password>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
-	<profiles>
-		<profile>
-			<id>dev</id>
-			<properties>
-				<spring.profiles.active>dev</spring.profiles.active>
-			</properties>
-		</profile>
-		<profile>
-			<id>prod</id>
-			<properties>
-				<spring.profiles.active>prod</spring.profiles.active>
-			</properties>
-		</profile>
-	</profiles>
+import java.util.Optional;
 
-</project>
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import com.daw.finalProject.model.Usuario;
+
+public class CustomerUserDetailServiceTest {
+
+    @Mock
+    private UsuarioService usuarioService;
+
+    @InjectMocks
+    private CustomerUserDetailService customerUserDetailService;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    public void loadUserByUsername_UserExists_ReturnsUserDetails() {
+        // Configurar el comportamiento del mock
+        Usuario usuario = new Usuario();
+        usuario.setEmail("test@example.com");
+        usuario.setPassword("password");
+        usuario.setRol("USER");
+
+        when(usuarioService.findByEmail("test@example.com")).thenReturn(Optional.of(usuario));
+
+        // Llamar al método a probar
+        UserDetails userDetails = customerUserDetailService.loadUserByUsername("test@example.com");
+
+        // Verificar el resultado
+        assertNotNull(userDetails);
+        assertEquals("test@example.com", userDetails.getUsername());
+        assertEquals("password", userDetails.getPassword());
+        assertTrue(userDetails.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("ROLE_USER")));
+    }
+
+    @Test
+    public void loadUserByUsername_UserDoesNotExist_ThrowsException() {
+        // Configurar el comportamiento del mock
+        when(usuarioService.findByEmail("nonexistent@example.com")).thenReturn(Optional.empty());
+
+        // Llamar al método a probar y esperar una excepción
+        assertThrows(UsernameNotFoundException.class, () -> {
+            customerUserDetailService.loadUserByUsername("nonexistent@example.com");
+        });
+    }
+}
 
 
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\java\com\daw\finalProject\DawFinalProjectApplication.java ---
+--- Contenido de /home/theguardian/GIT/dawLinkiaFinalProject/backend/dawFinalProject/src/main/java/com/daw/finalProject/DawFinalProjectApplication.java ---
 package com.daw.finalProject;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1810,125 +349,95 @@ public class DawFinalProjectApplication implements CommandLineRunner {
 }
 
 
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\java\com\daw\finalProject\configuration\OpenApiConfig.java ---
-package com.daw.finalProject.configuration;
+--- Contenido de /home/theguardian/GIT/dawLinkiaFinalProject/backend/dawFinalProject/src/main/java/com/daw/finalProject/service/UsuarioService.java ---
+package com.daw.finalProject.service;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Info;
-
-/**
- * Configuración personalizada para OpenAPI (Swagger).
- */
-@Configuration
-public class OpenApiConfig {
-
-    /**
-     * Define la configuración de OpenAPI para la documentación de la API.
-     *
-     * @return Instancia de OpenAPI configurada
-     */
-    @Bean
-    public OpenAPI customOpenAPI() {
-        return new OpenAPI()
-                .info(new Info()
-                        .title("API de Proyecto Final DAW")
-                        .version("1.0")
-                        .description("Documentación de la API para el Proyecto Final de DAW"));
-    }
-}
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\java\com\daw\finalProject\configuration\SecurityConfig.java ---
-package com.daw.finalProject.configuration;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Service;
 
-import com.daw.finalProject.security.JwtAuthenticationFilter;
+import com.daw.finalProject.model.Usuario;
+import com.daw.finalProject.repository.IUsuarioRepository;
 
-@Configuration
-public class SecurityConfig {
+@Service
+public class UsuarioService {
 
-    // Servicio para obtener detalles de usuario
-    @SuppressWarnings("unused")
     @Autowired
-    private UserDetailsService userDetailsService;
+    private IUsuarioRepository usuarioRepository;
 
-    // Filtro para manejar JWT
-    @Autowired
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
-
-    /**
-     * Define las reglas de seguridad para las solicitudes HTTP.
-     *
-     * @param http Objeto HttpSecurity para configurar las reglas.
-     * @return SecurityFilterChain configurado.
-     * @throws Exception en caso de error de configuración.
-     */
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable) // Desactiva CSRF, en este caso las sesiones se guardan en JWT
-                // configuracion de peticiones http entrantes
-                .authorizeHttpRequests(authz -> {
-                    // para autenticacion se permiten solicitudes sin autenticarse
-                    authz.requestMatchers("/api/auth/**").permitAll()
-                            .anyRequest().authenticated();
-                })
-                // manejo de sesiones con politica stateless, es decir cada peticion necesita un
-                // JWT
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-        // Añadimos un filtro para validar el JWT antes de procesar la autenticacion
-        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
+    // Verificar que no existe el usuario
+    public Boolean validarExistenciaUsuarioByEmail(String email) {
+        return usuarioRepository.existsByEmail(email);
     }
 
-    /**
-     * Configura el AuthenticationManager con el UserDetailsService y el
-     * PasswordEncoder.
-     *
-     * @param http               Objeto HttpSecurity
-     * @param passwordEncoder    Bean de PasswordEncoder
-     * @param userDetailsService Bean de UserDetailsService
-     * @return AuthenticationManager configurado
-     * @throws Exception En caso de errores durante la configuración
-     */
-    @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder passwordEncoder,
-            UserDetailsService userDetailsService) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = http
-                .getSharedObject(AuthenticationManagerBuilder.class);
-
-        authenticationManagerBuilder.userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder());
-        return authenticationManagerBuilder.build();
-
+    // Guardar usuario en base de datos
+    public Usuario guardarUsuario(Usuario usuario) {
+        return usuarioRepository.save(usuario);
     }
 
-    // Algoritmo usado para encriptar contraseñas
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public Optional<Usuario> findByEmail(String email) {
+        return usuarioRepository.findByEmail(email);
     }
 }
 
 
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\java\com\daw\finalProject\controller\AuthController.java ---
+--- Contenido de /home/theguardian/GIT/dawLinkiaFinalProject/backend/dawFinalProject/src/main/java/com/daw/finalProject/service/CustomerUserDetailService.java ---
+package com.daw.finalProject.service;
+
+import java.util.Collection;
+import java.util.Collections;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import com.daw.finalProject.model.Usuario;
+
+@Service
+public class CustomerUserDetailService implements UserDetailsService {
+
+    // servicio para gestión de usuarios
+    @Autowired
+    private UsuarioService usuarioService;
+
+    /**
+     * Obtiene las autoridades (roles) del usuario.
+     *
+     * @param usuario Objeto Usuario
+     * @return Colección de GrantedAuthority que representan los roles del usuario
+     */
+    private Collection<? extends GrantedAuthority> getAuthorities(Usuario usuario) {
+
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + usuario.getRol()));
+    }
+
+    /**
+     * Carga los detalles del usuario por su nombre de usuario (email).
+     *
+     * @param username Nombre de usuario (email) del usuario
+     * @return Objeto UserDetails que contiene los detalles del usuario
+     * @throws UsernameNotFoundException Si el usuario no se encuentra en la base de
+     *                                   datos
+     */
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Usuario usuario = usuarioService.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException(
+                        "Usuario con mail: " + username + " no se encuentra en la base de datos"));
+
+        return new User(usuario.getEmail(), usuario.getPassword(), getAuthorities(usuario));
+    }
+
+}
+
+
+--- Contenido de /home/theguardian/GIT/dawLinkiaFinalProject/backend/dawFinalProject/src/main/java/com/daw/finalProject/controller/AuthController.java ---
 package com.daw.finalProject.controller;
 
 import java.util.Collections;
@@ -2036,321 +545,7 @@ public class AuthController {
 }
 
 
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\java\com\daw\finalProject\exception\GlobalExceptionHandler.java ---
-package com.daw.finalProject.exception;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-/**
- * Manejador global de excepciones para capturar y manejar excepciones en toda
- * la aplicación.
- */
-@RestControllerAdvice
-public class GlobalExceptionHandler {
-
-    /**
-     * Maneja las excepciones de credenciales inválidas.
-     *
-     * @param ex Excepción BadCredentialsException
-     * @return Respuesta HTTP con estado 401 y mensaje de error
-     */
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<?> handleBadCredentialsException(BadCredentialsException ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales no válidas");
-    }
-
-    /**
-     * Maneja las excepciones cuando un usuario no es encontrado.
-     *
-     * @param ex Excepción UsernameNotFoundException
-     * @return Respuesta HTTP con estado 404 y mensaje de error
-     */
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<?> handleUsernameNotFoundException(UsernameNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-    }
-
-    /**
-     * Maneja las excepciones de validación con parametros de entrada en peticiones HTTP
-     *
-     * @param ex Excepción MethodArgumentNotValidException
-     * @return Respuesta HTTP con estado 400 y detalles de los errores de validación
-     */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        // Puede haber más de un parametro de entrada con errores asique iteramos todos y los agregamos al map
-        ex.getBindingResult().getFieldErrors()
-                .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
-        return ResponseEntity.badRequest().body(errors);
-    }
-
-    /**
-     * Maneja todas las demás excepciones no específicas.
-     *
-     * @param ex Excepción Exception
-     * @return Respuesta HTTP con estado 500 y mensaje de error genérico
-     */
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleGlobalException(Exception ex) {
-        ex.printStackTrace(); // Imprime la traza de la excepción para depuración
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocurrió un error inesperado");
-    }
-}
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\java\com\daw\finalProject\model\Usuario.java ---
-package com.daw.finalProject.model;
-
-import java.time.LocalDateTime;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Table;
-import lombok.Data;
-
-@Entity
-@Table(name = "usuario")
-@Data
-public class Usuario {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false)
-    private String nombre;
-
-    @Column(nullable = false)
-    private String apellidos;
-
-    @Column(nullable = false, unique = true)
-    private String email;
-
-    @Column(nullable = false)
-    private String password;
-
-    @Column(nullable = false)
-    private String rol;
-
-    @Column(name = "fecha_creacion", nullable = false, updatable = false)
-    private LocalDateTime fechaCreacion = LocalDateTime.now();
-
-    @Column(name = "fecha_modificacion", nullable = false)
-    private LocalDateTime fechaModificacion = LocalDateTime.now();
-
-    // antes de guardar en base de datos settear las fechas actuales
-    @PrePersist
-    protected void onCreate() {
-        fechaCreacion = LocalDateTime.now();
-        fechaModificacion = LocalDateTime.now();
-    }
-
-    // al actualizar la entidad guardar la fecha de modificacion actual en base de datos
-    @PreUpdate
-    protected void onUpdate() {
-        fechaModificacion = LocalDateTime.now();
-    }
-}
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\java\com\daw\finalProject\payload\AuthResponse.java ---
-package com.daw.finalProject.payload;
-
-import lombok.Data;
-
-/**
- * Clase para manejar las solicitudes de registro de usuarios.
- */
-@Data
-public class AuthResponse {
-
-    private String token; // Token JWT generado para el usuario autenticado
-
-    /**
-     * Constructor para AuthResponse.
-     *
-     * @param token Token JWT generado
-     */
-    public AuthResponse(String token) {
-        this.token = token;
-    }
-
-}
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\java\com\daw\finalProject\payload\LoginRequest.java ---
-package com.daw.finalProject.payload;
-
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
-
-/**
- * Clase para manejar las solicitudes de login de usuarios.
- */
-@Data // Genera getters y setters automáticamente
-public class LoginRequest {
-
-    // Email del usuario, debe ser válido y no puede estar vacío
-    @NotBlank(message = "El email es obligatorio")
-    @Email(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "El email debe ser válido")
-    private String email;
-
-    // Contraseña del usuario, no puede estar vacía
-    @NotBlank(message = "La contraseña es obligatoria")
-    private String password;
-}
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\java\com\daw\finalProject\payload\RegistroRequest.java ---
-package com.daw.finalProject.payload;
-
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-import lombok.Data;
-
-/**
- * Clase para manejar las solicitudes de registro de usuarios.
- */
-@Data // Genera getters y setters automáticamente
-public class RegistroRequest {
-
-    @NotBlank(message = "El nombre es obligatorio")
-    private String nombre;
-
-    @NotBlank(message = "Los apellidos son obligatorios")
-    private String apellidos;
-
-    @NotBlank(message = "El nombre es obligatorio")
-    @Email(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "El email debe ser válido")
-    private String email;
-
-    @NotBlank(message = "El nombre es obligatorio")
-    @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres")
-    private String password;
-
-}
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\java\com\daw\finalProject\repository\IUsuarioRepository.java ---
-package com.daw.finalProject.repository;
-
-import java.util.Optional;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-import com.daw.finalProject.model.Usuario;
-
-@Repository
-public interface IUsuarioRepository extends JpaRepository<Usuario, Long> {
-
-    /**
-     * Busca un usuario por su email.
-     *
-     * @param email Email del usuario a buscar
-     * @return Optional que contiene el usuario si se encuentra, o vacío si no
-     */
-    Optional<Usuario> findByEmail(String email);
-
-    Boolean existsByEmail(String email);
-
-}
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\java\com\daw\finalProject\security\JwtAuthenticationFilter.java ---
-package com.daw.finalProject.security;
-
-import java.io.IOException;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
-
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
-/**
- * Filtro de autenticación JWT que valida el token en cada solicitud.
- */
-@Component
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
-
-    // Servicio para gestionar el JWT
-    @Autowired
-    private JwtUtil jwtUtil;
-
-    // Servicio para cargar los usuarios de base de datos
-    @Autowired
-    private UserDetailsService userDetailsService;
-
-    /**
-     * Método que se ejecuta en cada solicitud para validar el token JWT.
-     *
-     * @param request     Solicitud HTTP entrante
-     * @param response    Respuesta HTTP
-     * @param filterChain Cadena de filtros
-     * @throws ServletException En caso de errores de servlet
-     * @throws IOException      En caso de errores de E/S
-     */
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
-
-        String header = request.getHeader("Authorization");
-        String token = null;
-        String mail = null;
-
-        // Veficar el encabezado correcto del JWT
-        if (header != null && header.startsWith("Bearer ")) {
-            token = header.substring(7); // extraemos el token sin el prefijo
-            mail = jwtUtil.extractUsername(token); // extraemos el mail del usuario
-        }
-
-        // si el usuario existe y no hay autenticacion previa
-        if (mail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            // obtenemos el usuario
-            UserDetails userDetails = userDetailsService.loadUserByUsername(mail);
-
-            // validamos el token
-            if (jwtUtil.validateToken(token, mail)) {
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(mail,
-                        null, userDetails.getAuthorities());
-                // detalles de solicitud
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                // se establece la autenticacion para la solicitud
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
-        }
-
-        filterChain.doFilter(request, response);
-
-    }
-
-}
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\java\com\daw\finalProject\security\JwtUtil.java ---
+--- Contenido de /home/theguardian/GIT/dawLinkiaFinalProject/backend/dawFinalProject/src/main/java/com/daw/finalProject/security/JwtUtil.java ---
 package com.daw.finalProject.security;
 
 import java.util.Date;
@@ -2433,95 +628,472 @@ public class JwtUtil {
 }
 
 
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\java\com\daw\finalProject\service\CustomerUserDetailService.java ---
-package com.daw.finalProject.service;
+--- Contenido de /home/theguardian/GIT/dawLinkiaFinalProject/backend/dawFinalProject/src/main/java/com/daw/finalProject/security/JwtAuthenticationFilter.java ---
+package com.daw.finalProject.security;
 
-import java.util.Collection;
-import java.util.Collections;
+import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.daw.finalProject.model.Usuario;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-@Service
-public class CustomerUserDetailService implements UserDetailsService {
+/**
+ * Filtro de autenticación JWT que valida el token en cada solicitud.
+ */
+@Component
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    // servicio para gestión de usuarios
+    // Servicio para gestionar el JWT
     @Autowired
-    private UsuarioService usuarioService;
+    private JwtUtil jwtUtil;
+
+    // Servicio para cargar los usuarios de base de datos
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     /**
-     * Obtiene las autoridades (roles) del usuario.
+     * Método que se ejecuta en cada solicitud para validar el token JWT.
      *
-     * @param usuario Objeto Usuario
-     * @return Colección de GrantedAuthority que representan los roles del usuario
-     */
-    private Collection<? extends GrantedAuthority> getAuthorities(Usuario usuario) {
-
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + usuario.getRol()));
-    }
-
-    /**
-     * Carga los detalles del usuario por su nombre de usuario (email).
-     *
-     * @param username Nombre de usuario (email) del usuario
-     * @return Objeto UserDetails que contiene los detalles del usuario
-     * @throws UsernameNotFoundException Si el usuario no se encuentra en la base de
-     *                                   datos
+     * @param request     Solicitud HTTP entrante
+     * @param response    Respuesta HTTP
+     * @param filterChain Cadena de filtros
+     * @throws ServletException En caso de errores de servlet
+     * @throws IOException      En caso de errores de E/S
      */
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Usuario usuario = usuarioService.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        "Usuario con mail: " + username + " no se encuentra en la base de datos"));
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
 
-        return new User(usuario.getEmail(), usuario.getPassword(), getAuthorities(usuario));
+        String header = request.getHeader("Authorization");
+        String token = null;
+        String mail = null;
+
+        // Veficar el encabezado correcto del JWT
+        if (header != null && header.startsWith("Bearer ")) {
+            token = header.substring(7); // extraemos el token sin el prefijo
+            try {
+                mail = jwtUtil.extractUsername(token);
+            } catch (Exception e) {
+                logger.error("No se pudo obtener el nombre de usuario del token", e);
+            } // extraemos el mail del usuario
+        }
+
+        // si el usuario existe y no hay autenticacion previa
+        if (mail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            // obtenemos el usuario
+            UserDetails userDetails = userDetailsService.loadUserByUsername(mail);
+
+            // validamos el token
+            if (jwtUtil.validateToken(token, mail)) {
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(mail,
+                        null, userDetails.getAuthorities());
+                // detalles de solicitud
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                // se establece la autenticacion para la solicitud
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        }
+
+        filterChain.doFilter(request, response);
+
     }
 
 }
 
 
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\java\com\daw\finalProject\service\UsuarioService.java ---
-package com.daw.finalProject.service;
+--- Contenido de /home/theguardian/GIT/dawLinkiaFinalProject/backend/dawFinalProject/src/main/java/com/daw/finalProject/repository/IUsuarioRepository.java ---
+package com.daw.finalProject.repository;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import com.daw.finalProject.model.Usuario;
-import com.daw.finalProject.repository.IUsuarioRepository;
 
-@Service
-public class UsuarioService {
+@Repository
+public interface IUsuarioRepository extends JpaRepository<Usuario, Long> {
 
-    @Autowired
-    private IUsuarioRepository usuarioRepository;
+    /**
+     * Busca un usuario por su email.
+     *
+     * @param email Email del usuario a buscar
+     * @return Optional que contiene el usuario si se encuentra, o vacío si no
+     */
+    Optional<Usuario> findByEmail(String email);
 
-    // Verificar que no existe el usuario
-    public Boolean validarExistenciaUsuarioByEmail(String email) {
-        return usuarioRepository.existsByEmail(email);
-    }
+    Boolean existsByEmail(String email);
 
-    // Guardar usuario en base de datos
-    public Usuario guardarUsuario(Usuario usuario) {
-        return usuarioRepository.save(usuario);
-    }
+}
 
-    public Optional<Usuario> findByEmail(String email) {
-        return usuarioRepository.findByEmail(email);
+
+--- Contenido de /home/theguardian/GIT/dawLinkiaFinalProject/backend/dawFinalProject/src/main/java/com/daw/finalProject/configuration/OpenApiConfig.java ---
+package com.daw.finalProject.configuration;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+
+/**
+ * Configuración personalizada para OpenAPI (Swagger).
+ */
+@Configuration
+public class OpenApiConfig {
+
+    /**
+     * Define la configuración de OpenAPI para la documentación de la API.
+     *
+     * @return Instancia de OpenAPI configurada
+     */
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+                .info(new Info()
+                        .title("API de Proyecto Final DAW")
+                        .version("1.0")
+                        .description("Documentación de la API para el Proyecto Final de DAW"));
     }
 }
 
 
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\resources\application-dev.properties ---
+--- Contenido de /home/theguardian/GIT/dawLinkiaFinalProject/backend/dawFinalProject/src/main/java/com/daw/finalProject/configuration/SecurityConfig.java ---
+package com.daw.finalProject.configuration;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
+import com.daw.finalProject.security.JwtAuthenticationFilter;
+
+@Configuration
+public class SecurityConfig {
+
+    // Servicio para obtener detalles de usuario
+    @SuppressWarnings("unused")
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    // Filtro para manejar JWT
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    /**
+     * Define las reglas de seguridad para las solicitudes HTTP.
+     *
+     * @param http Objeto HttpSecurity para configurar las reglas.
+     * @return SecurityFilterChain configurado.
+     * @throws Exception en caso de error de configuración.
+     */
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.csrf(AbstractHttpConfigurer::disable) // Desactiva CSRF, en este caso las sesiones se guardan en JWT
+                // configuracion de peticiones http entrantes
+                .authorizeHttpRequests(authz -> {
+                    // para autenticacion se permiten solicitudes sin autenticarse
+                    authz.requestMatchers("/api/auth/**").permitAll()
+                            .anyRequest().authenticated();
+                })
+                // manejo de sesiones con politica stateless, es decir cada peticion necesita un
+                // JWT
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        // Añadimos un filtro para validar el JWT antes de procesar la autenticacion
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+
+    /**
+     * Configura el AuthenticationManager con el UserDetailsService y el
+     * PasswordEncoder.
+     *
+     * @param http               Objeto HttpSecurity
+     * @param passwordEncoder    Bean de PasswordEncoder
+     * @param userDetailsService Bean de UserDetailsService
+     * @return AuthenticationManager configurado
+     * @throws Exception En caso de errores durante la configuración
+     */
+    @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder passwordEncoder,
+            UserDetailsService userDetailsService) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder = http
+                .getSharedObject(AuthenticationManagerBuilder.class);
+
+        authenticationManagerBuilder.userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder());
+        return authenticationManagerBuilder.build();
+
+    }
+
+    // Algoritmo usado para encriptar contraseñas
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    /**
+     * Configuración de CORS para permitir solicitudes desde el frontend.
+     *
+     * @return CorsFilter configurado
+     */
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("http://localhost:3000"); // Ajusta según tu frontend
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
+    }
+}
+
+
+--- Contenido de /home/theguardian/GIT/dawLinkiaFinalProject/backend/dawFinalProject/src/main/java/com/daw/finalProject/exception/GlobalExceptionHandler.java ---
+package com.daw.finalProject.exception;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+/**
+ * Manejador global de excepciones para capturar y manejar excepciones en toda
+ * la aplicación.
+ */
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    /**
+     * Maneja las excepciones de credenciales inválidas.
+     *
+     * @param ex Excepción BadCredentialsException
+     * @return Respuesta HTTP con estado 401 y mensaje de error
+     */
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<?> handleBadCredentialsException(BadCredentialsException ex) {
+        logger.error("Error BadCredentialsException: ", ex);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales no válidas");
+    }
+
+    /**
+     * Maneja las excepciones cuando un usuario no es encontrado.
+     *
+     * @param ex Excepción UsernameNotFoundException
+     * @return Respuesta HTTP con estado 404 y mensaje de error
+     */
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<?> handleUsernameNotFoundException(UsernameNotFoundException ex) {
+        logger.error("Error UsernameNotFoundException: ", ex);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    /**
+     * Maneja las excepciones de validación con parametros de entrada en peticiones
+     * HTTP
+     *
+     * @param ex Excepción MethodArgumentNotValidException
+     * @return Respuesta HTTP con estado 400 y detalles de los errores de validación
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        // Puede haber más de un parametro de entrada con errores asique iteramos todos
+        // y los agregamos al map
+        ex.getBindingResult().getFieldErrors()
+                .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
+        return ResponseEntity.badRequest().body(errors);
+    }
+
+    /**
+     * Maneja todas las demás excepciones no específicas.
+     *
+     * @param ex Excepción Exception
+     * @return Respuesta HTTP con estado 500 y mensaje de error genérico
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> handleGlobalException(Exception ex) {
+        logger.error("Error Global Exception: ", ex);
+        ex.printStackTrace(); // Imprime la traza de la excepción para depuración
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocurrió un error inesperado");
+    }
+}
+
+
+--- Contenido de /home/theguardian/GIT/dawLinkiaFinalProject/backend/dawFinalProject/src/main/java/com/daw/finalProject/model/Usuario.java ---
+package com.daw.finalProject.model;
+
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
+import lombok.Data;
+
+@Entity
+@Table(name = "usuario")
+@Data
+public class Usuario {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String nombre;
+
+    @Column(nullable = false)
+    private String apellidos;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false)
+    private String rol;
+
+    @Column(name = "fecha_creacion", nullable = false, updatable = false)
+    private LocalDateTime fechaCreacion = LocalDateTime.now();
+
+    @Column(name = "fecha_modificacion", nullable = false)
+    private LocalDateTime fechaModificacion = LocalDateTime.now();
+
+    // antes de guardar en base de datos settear las fechas actuales
+    @PrePersist
+    protected void onCreate() {
+        fechaCreacion = LocalDateTime.now();
+        fechaModificacion = LocalDateTime.now();
+    }
+
+    // al actualizar la entidad guardar la fecha de modificacion actual en base de datos
+    @PreUpdate
+    protected void onUpdate() {
+        fechaModificacion = LocalDateTime.now();
+    }
+}
+
+--- Contenido de /home/theguardian/GIT/dawLinkiaFinalProject/backend/dawFinalProject/src/main/java/com/daw/finalProject/payload/LoginRequest.java ---
+package com.daw.finalProject.payload;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+
+/**
+ * Clase para manejar las solicitudes de login de usuarios.
+ */
+@Data // Genera getters y setters automáticamente
+public class LoginRequest {
+
+    // Email del usuario, debe ser válido y no puede estar vacío
+    @NotBlank(message = "El email es obligatorio")
+    @Email(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "El email debe ser válido")
+    private String email;
+
+    // Contraseña del usuario, no puede estar vacía
+    @NotBlank(message = "La contraseña es obligatoria")
+    private String password;
+}
+
+
+--- Contenido de /home/theguardian/GIT/dawLinkiaFinalProject/backend/dawFinalProject/src/main/java/com/daw/finalProject/payload/RegistroRequest.java ---
+package com.daw.finalProject.payload;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.Data;
+
+/**
+ * Clase para manejar las solicitudes de registro de usuarios.
+ */
+@Data // Genera getters y setters automáticamente
+public class RegistroRequest {
+
+    @NotBlank(message = "El nombre es obligatorio")
+    private String nombre;
+
+    @NotBlank(message = "Los apellidos son obligatorios")
+    private String apellidos;
+
+    @NotBlank(message = "El nombre es obligatorio")
+    @Email(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "El email debe ser válido")
+    private String email;
+
+    @NotBlank(message = "El nombre es obligatorio")
+    @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres")
+    private String password;
+
+}
+
+
+--- Contenido de /home/theguardian/GIT/dawLinkiaFinalProject/backend/dawFinalProject/src/main/java/com/daw/finalProject/payload/AuthResponse.java ---
+package com.daw.finalProject.payload;
+
+import lombok.Data;
+
+/**
+ * Clase para manejar las solicitudes de registro de usuarios.
+ */
+@Data
+public class AuthResponse {
+
+    private String token; // Token JWT generado para el usuario autenticado
+
+    /**
+     * Constructor para AuthResponse.
+     *
+     * @param token Token JWT generado
+     */
+    public AuthResponse(String token) {
+        this.token = token;
+    }
+
+}
+
+--- Contenido de /home/theguardian/GIT/dawLinkiaFinalProject/backend/dawFinalProject/src/main/resources/application-dev.properties ---
 # Perfil de Desarrollo
 
 # Nombre de la aplicación
@@ -2551,7 +1123,14 @@ server.port=8081
 
 
 
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\resources\application-prod.properties ---
+--- Contenido de /home/theguardian/GIT/dawLinkiaFinalProject/backend/dawFinalProject/src/main/resources/application.properties ---
+# application.properties
+
+# Perfil por defecto
+spring.profiles.active=dev
+
+
+--- Contenido de /home/theguardian/GIT/dawLinkiaFinalProject/backend/dawFinalProject/src/main/resources/application-prod.properties ---
 # Perfil de Producción
 
 # Nombre de la aplicación
@@ -2580,14 +1159,7 @@ spring.flyway.baseline-on-migrate=true
 server.port=8081
 
 
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\resources\application.properties ---
-# application.properties
-
-# Perfil por defecto
-spring.profiles.active=dev
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\main\resources\db\migration\V1__Crear_tabla_usuario.sql ---
+--- Contenido de /home/theguardian/GIT/dawLinkiaFinalProject/backend/dawFinalProject/src/main/resources/db/migration/V1__Crear_tabla_usuario.sql ---
 CREATE TABLE usuario (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
@@ -2598,92 +1170,5 @@ CREATE TABLE usuario (
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\test\java\com\daw\finalProject\DawFinalProjectApplicationTests.java ---
-package com.daw.finalProject;
-
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-
-@SpringBootTest
-class DawFinalProjectApplicationTests {
-
-	@Test
-	void contextLoads() {
-	}
-
-}
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\backend\dawFinalProject\src\test\java\com\daw\finalProject\service\CustomerUserDetailServiceTest.java ---
-package com.daw.finalProject.service;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
-
-import java.util.Optional;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
-import com.daw.finalProject.model.Usuario;
-
-public class CustomerUserDetailServiceTest {
-
-    @Mock
-    private UsuarioService usuarioService;
-
-    @InjectMocks
-    private CustomerUserDetailService customerUserDetailService;
-
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
-
-    @Test
-    public void loadUserByUsername_UserExists_ReturnsUserDetails() {
-        // Configurar el comportamiento del mock
-        Usuario usuario = new Usuario();
-        usuario.setEmail("test@example.com");
-        usuario.setPassword("password");
-        usuario.setRol("USER");
-
-        when(usuarioService.findByEmail("test@example.com")).thenReturn(Optional.of(usuario));
-
-        // Llamar al método a probar
-        UserDetails userDetails = customerUserDetailService.loadUserByUsername("test@example.com");
-
-        // Verificar el resultado
-        assertNotNull(userDetails);
-        assertEquals("test@example.com", userDetails.getUsername());
-        assertEquals("password", userDetails.getPassword());
-        assertTrue(userDetails.getAuthorities().stream()
-                .anyMatch(auth -> auth.getAuthority().equals("ROLE_USER")));
-    }
-
-    @Test
-    public void loadUserByUsername_UserDoesNotExist_ThrowsException() {
-        // Configurar el comportamiento del mock
-        when(usuarioService.findByEmail("nonexistent@example.com")).thenReturn(Optional.empty());
-
-        // Llamar al método a probar y esperar una excepción
-        assertThrows(UsernameNotFoundException.class, () -> {
-            customerUserDetailService.loadUserByUsername("nonexistent@example.com");
-        });
-    }
-}
-
-
---- Contenido de C:\Users\joshu\dev\DAW\Proyecto_Final\ignore\dump_project.py ---
 
 

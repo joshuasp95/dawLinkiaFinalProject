@@ -1,7 +1,7 @@
 import os
 
 # Ruta del proyecto
-project_path = 'C:\\Users\\joshu\\dev\\DAW\\Proyecto_Final'
+project_path = '/home/theguardian/GIT/dawLinkiaFinalProject/backend/dawFinalProject'
 
 # Definición de extensiones a excluir
 excluded_extensions = (
@@ -28,7 +28,7 @@ excluded_directories = (
 
 
 # Archivo de salida
-output_file = 'ignore\\project_contents.txt'
+output_file = '/home/theguardian/GIT/dawLinkiaFinalProject/ignore/backend/project_contents.txt'
 
 with open(output_file, 'w', encoding='utf-8') as outfile:
     # Recorrer el directorio
