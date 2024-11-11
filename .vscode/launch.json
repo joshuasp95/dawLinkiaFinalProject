@@ -1,24 +1,28 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-      {"name":"Depurador de Python: Archivo actual","type":"debugpy","request":"launch","program":"${file}","console":"integratedTerminal"},
-      {
-      
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Depurador de Python: Archivo actual",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal"
+    },
+    {
       "name": "Debug React App",
       "type": "chrome",
       "request": "launch",
       "url": "http://localhost:3000",
       "webRoot": "${workspaceFolder}/src",
       "preLaunchTask": "npm: start"
-  },
-        
-      {
-        "type": "java",
-        "name": "Debug (Attach)",
-        "request": "attach",
-        "hostName": "localhost",
-        "port": 5005
-      }
-    ]
-  }
-  
+    },
+
+    {
+      "type": "java",
+      "name": "Debug (Attach)",
+      "request": "attach",
+      "hostName": "localhost",
+      "port": 5005
+    }
+  ]
+}
