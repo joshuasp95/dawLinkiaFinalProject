@@ -8,6 +8,9 @@ ENV NODE_ENV production
 ARG REACT_APP_API_URL
 ENV REACT_APP_API_URL $REACT_APP_API_URL
 
+# Después de establecer ENV REACT_APP_API_URL
+RUN echo "REACT_APP_API_URL is set to $REACT_APP_API_URL"
+
 # Directorio de trabajo
 WORKDIR /app
 
