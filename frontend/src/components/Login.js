@@ -1,5 +1,5 @@
 // src/components/Login.js
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
     Container,
     TextField,
@@ -10,10 +10,12 @@ import {
     Link,
 } from '@mui/material';
 import authService from '../services/authService';
+import { AuthContext } from '../context/AuthContext';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const navigate = useNavigate();
+    const { login } = useContext(AuthContext);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -34,6 +36,8 @@ const Login = () => {
         try {
             const response = await authService.login(email, password);
             const { token } = response.data;
+            
+            login(token);
 
             // Guardar el token en localStorage
             localStorage.setItem('token', token);
