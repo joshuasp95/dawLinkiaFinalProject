@@ -1,6 +1,7 @@
 // src/context/AuthContext.js
 import React, { createContext, useState, useEffect } from 'react';
-import jwtDecode from 'jwt-decode'; // Importa la función usando una importación nombrada
+// @ts-ignore  
+import jwt_decode from "jwt-decode";
 
 // Crea el contexto de autenticación
 export const AuthContext = createContext();
@@ -12,14 +13,14 @@ export const AuthProvider = ({ children }) => {
 
     // Estado para almacenar los datos del usuario decodificados del token JWT
     const [user, setUser] = useState(() => (
-        authToken ? jwtDecode(authToken) : null // Decodifica el token solo si existe
+        authToken ? jwt_decode(authToken) : null // Decodifica el token solo si existe
     ));
 
     // useEffect para actualizar el estado del usuario cada vez que el authToken cambie
     useEffect(() => {
         if (authToken) {
             // Si hay un token, decodifica y establece los datos del usuario
-            setUser(jwtDecode(authToken));
+            setUser(jwt_decode(authToken));
         } else {
             // Si no hay token, establece el usuario como null
             setUser(null);
