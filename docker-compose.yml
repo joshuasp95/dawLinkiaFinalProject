@@ -7,8 +7,8 @@ services:
     restart: always
     environment:
       MYSQL_DATABASE: "dawFinalProject"
-      MYSQL_USER: "root"
-      MYSQL_PASSWORD: "usopp12*"
+      MYSQL_USER: "joshua"
+      MYSQL_PASSWORD: "linkia.2024"
       MYSQL_ROOT_PASSWORD: "usopp12*"
     ports:
       - "3307:3306" # Producción usa el puerto estándar
