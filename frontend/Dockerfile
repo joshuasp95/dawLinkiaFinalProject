@@ -1,6 +1,9 @@
 # Etapa de construcción
 FROM node:16-alpine AS builder
 
+# Establecer el entorno de producción
+ENV NODE_ENV production
+
 # Establece la variable de entorno
 ARG REACT_APP_API_URL
 ENV REACT_APP_API_URL $REACT_APP_API_URL
