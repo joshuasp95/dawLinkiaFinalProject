@@ -7,7 +7,7 @@ PROJECT_DIR=~/dawLinkiaFinalProject
 cd $PROJECT_DIR || exit
 
 # Detén los contenedores actuales
-docker-compose down
+docker compose down
 
 # Actualiza el código desde la rama main
 git checkout main
