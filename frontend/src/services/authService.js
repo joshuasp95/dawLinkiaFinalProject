@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // URL base de la API
-const API_URL = 'http://localhost:8081/api/auth/';
+const API_URL = process.env.API_URL;
 
 /**
  * Función para iniciar sesión.
