@@ -1,8 +1,11 @@
 package com.daw.finalProject.configuration;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,6 +24,9 @@ import com.daw.finalProject.security.JwtAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
+
+    @Autowired
+    private Environment environment;
 
     // Servicio para obtener detalles de usuario
     @SuppressWarnings("unused")
@@ -95,7 +101,9 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:3000"); // Ajusta según tu frontend
+        // Origenes permitos en .env
+        String allowedOrigins = environment.getProperty("cors.allowed.origins", "*");
+        Arrays.stream(allowedOrigins.split(",")).forEach(origin -> config.addAllowedOrigin(origin.trim()));
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
