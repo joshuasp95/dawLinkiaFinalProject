@@ -2,7 +2,8 @@
 import axios from 'axios';
 
 // URL base de la API
-const API_URL = process.env.API_URL;
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8081/api/auth/';
+console.log('API_URL:', API_URL); 
 
 /**
  * Función para iniciar sesión.

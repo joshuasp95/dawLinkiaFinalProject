@@ -15,7 +15,7 @@ services:
     volumes:
       - my-db:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -38,7 +38,10 @@ services:
       SPRING_FLYWAY_PASSWORD: "usopp12*"
 
   daw-frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        REACT_APP_API_URL: "https://app.joshuasainzweb.com/api/auth/"
     container_name: daw-frontend
     ports:
       - "3000:80" # Nginx sirve en el puerto 80 del contenedor
