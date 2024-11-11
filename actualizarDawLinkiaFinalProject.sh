@@ -14,7 +14,7 @@ git checkout main
 git pull origin main
 
 # Reconstruye y levanta los contenedores en segundo plano
-docker-compose up --build -d
+docker compose up --build -d
 
 # Limpiar imágenes y contenedores no utilizados
 docker system prune -f
