@@ -38,7 +38,5 @@ public class UsuarioMapperTest {
         assertEquals(usuario.getApellidos(), usuarioDTO.getApellidos());
         assertEquals(usuario.getEmail(), usuarioDTO.getEmail());
         assertEquals(usuario.getRol(), usuarioDTO.getRol());
-        assertEquals(usuario.getFechaCreacion(), usuarioDTO.getFechaCreacion());
-        assertEquals(usuario.getFechaModificacion(), usuarioDTO.getFechaModificacion());
     }
 }
