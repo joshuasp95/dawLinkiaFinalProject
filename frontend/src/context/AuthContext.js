@@ -1,6 +1,6 @@
 // src/context/AuthContext.js
 import React, { createContext, useState, useEffect } from "react";
-// @ts-ignore  
+// @ts-ignore
 import { jwtDecode as jwt_decode } from "jwt-decode";
 
 // Crea el contexto de autenticación
@@ -14,9 +14,14 @@ export const AuthProvider = ({ children }) => {
   );
 
   // Estado para almacenar los datos del usuario decodificados del token JWT
-  const [user, setUser] = useState(() =>
-    authToken ? jwt_decode(authToken) : null // Decodifica el token solo si existe
-  );
+  const [user, setUser] = useState(() => {
+    try {
+      return authToken ? jwt_decode(authToken) : null; // Decodifica el token solo si existe
+    } catch (error) {
+      console.error("Token inválido al inicializar:", error);
+      return null; // Si el token es inválido, retorna null
+    }
+  });
 
   console.log("AuthProvider - authToken:", authToken);
   console.log("AuthProvider - user:", user);
@@ -24,10 +29,18 @@ export const AuthProvider = ({ children }) => {
   // useEffect para actualizar el estado del usuario cada vez que el authToken cambie
   useEffect(() => {
     if (authToken) {
-      // Si hay un token, decodifica y establece los datos del usuario
-      const decodedUser = jwt_decode(authToken);
-      setUser(decodedUser);
-      console.log("AuthProvider - Actualizado user:", decodedUser);
+      try {
+        // Si hay un token, decodifica y establece los datos del usuario
+        const decodedUser = jwt_decode(authToken);
+        setUser(decodedUser);
+        console.log("AuthProvider - Actualizado user:", decodedUser);
+      } catch (error) {
+        // Si el token es inválido, establece el usuario como null y elimina el token
+        console.error("Error al decodificar el token:", error);
+        setUser(null);
+        setAuthToken(null);
+        localStorage.removeItem("token"); // Limpia el token inválido
+      }
     } else {
       // Si no hay token, establece el usuario como null
       setUser(null);
