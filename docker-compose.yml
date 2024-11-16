@@ -41,7 +41,7 @@ services:
     build:
       context: ./frontend
       args:
-        REACT_APP_API_URL: "/api/auth/"
+        REACT_APP_API_URL: "/api/"
     container_name: daw-frontend
     ports:
       - "3000:80" # Nginx sirve en el puerto 80 del contenedor
