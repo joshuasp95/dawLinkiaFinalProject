@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // URL base de la API
-const API_URL = process.env.REACT_APP_API_URL || '/api/auth/';
+const API_URL = process.env.REACT_APP_API_URL || '/api/';
 console.log('API_URL:', API_URL); 
 
 /**
@@ -14,10 +14,10 @@ console.log('API_URL:', API_URL);
  * @returns {Promise} - Promesa con la respuesta de la API.
  */
 const login = async (email, password) => {
-    console.log("URL de la solicitud de login:", `${API_URL}login`);
+    console.log("URL de la solicitud de login:", `${API_URL}auth/login`);
     console.log("Datos enviados:", { email, password });
     try {
-        const response = await axios.post(`${API_URL}login`, { email, password });
+        const response = await axios.post(`${API_URL}auth/login`, { email, password });
         console.log("Respuesta recibida:", response);
 
         return response;
@@ -40,7 +40,7 @@ const login = async (email, password) => {
  * @returns {Promise} - Promesa con la respuesta de la API.
  */
 const register = (nombre, apellidos, email, password) => {
-    return axios.post(`${API_URL}register`, { nombre, apellidos, email, password });
+    return axios.post(`${API_URL}auth/register`, { nombre, apellidos, email, password });
 };
 
 /**
