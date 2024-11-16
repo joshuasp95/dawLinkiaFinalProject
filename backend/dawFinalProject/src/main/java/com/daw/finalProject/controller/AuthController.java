@@ -18,6 +18,7 @@ import com.daw.finalProject.model.Usuario;
 import com.daw.finalProject.payload.AuthResponse;
 import com.daw.finalProject.payload.LoginRequest;
 import com.daw.finalProject.payload.RegistroRequest;
+import com.daw.finalProject.responseEntity.Response;
 import com.daw.finalProject.security.JwtUtil;
 import com.daw.finalProject.service.UsuarioService;
 
@@ -57,7 +58,10 @@ public class AuthController {
 
             String token = jwtUtil.generateToken(loginRequest.getEmail());
 
-            return ResponseEntity.ok(new AuthResponse(token));
+            AuthResponse authResponse = new AuthResponse(token);
+            Response<AuthResponse> response = new Response<>(true, authResponse, "Autenticación exitosa");
+
+            return ResponseEntity.ok(response);
 
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(401).body("credenciales no válidas");
@@ -76,7 +80,8 @@ public class AuthController {
 
         // Verificamos que el mail no existe en base de datos
         if (usuarioService.validarExistenciaUsuarioByEmail(registroRequest.getEmail())) {
-            return ResponseEntity.badRequest().body("Error: El email ya existe!");
+            return ResponseEntity.badRequest()
+                    .body(new Response<>(false, null, "Error: El email ya existe!"));
         }
 
         // Creamos el usuario con los datos proporcionados
@@ -89,7 +94,8 @@ public class AuthController {
 
         usuarioService.guardarUsuario(usuario);
 
-        return ResponseEntity.ok("Usuario registrado correctamente!");
+        Response<String> response = new Response<>(true, null, "Usuario registrado correctamente!");
+        return ResponseEntity.ok(response);
     }
 
     /**
