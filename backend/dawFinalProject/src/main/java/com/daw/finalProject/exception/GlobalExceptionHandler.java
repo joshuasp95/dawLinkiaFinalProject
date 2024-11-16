@@ -13,6 +13,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.daw.finalProject.responseEntity.Response;
+
 /**
  * Manejador global de excepciones para capturar y manejar excepciones en toda
  * la aplicación.
@@ -30,8 +32,9 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<?> handleBadCredentialsException(BadCredentialsException ex) {
-        logger.error("Error BadCredentialsException: ", ex);
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales no válidas");
+        logger.error("BadCredentialsException: ", ex);
+        Response<String> response = new Response<>(false, null, "Credenciales no válidas");
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 
     /**
@@ -42,8 +45,9 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<?> handleUsernameNotFoundException(UsernameNotFoundException ex) {
-        logger.error("Error UsernameNotFoundException: ", ex);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        logger.error("UsernameNotFoundException: ", ex);
+        Response<String> response = new Response<>(false, null, ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -56,11 +60,24 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
-        // Puede haber más de un parametro de entrada con errores asique iteramos todos
-        // y los agregamos al map
         ex.getBindingResult().getFieldErrors()
                 .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
-        return ResponseEntity.badRequest().body(errors);
+        Response<Map<String, String>> response = new Response<>(false, errors, "Errores de validación");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Maneja las excepciones cuando un recurso no se encuentra
+     * HTTP
+     *
+     * @param ex Excepción MethodArgumentNotValidException
+     * @return Respuesta HTTP con estado 400 y detalles de los errores de validación
+     */
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<?> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        logger.error("ResourceNotFoundException: ", ex);
+        Response<String> response = new Response<>(false, null, ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -71,8 +88,9 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGlobalException(Exception ex) {
-        logger.error("Error Global Exception: ", ex);
-        ex.printStackTrace(); // Imprime la traza de la excepción para depuración
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocurrió un error inesperado");
+        logger.error("Exception: ", ex);
+        Response<String> response = new Response<>(false, null, "Ocurrió un error inesperado");
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
 }
