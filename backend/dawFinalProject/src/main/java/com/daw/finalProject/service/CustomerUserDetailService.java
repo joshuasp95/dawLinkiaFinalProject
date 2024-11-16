@@ -42,7 +42,7 @@ public class CustomerUserDetailService implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Usuario usuario = usuarioService.findByEmail(username)
+        Usuario usuario = usuarioService.obtenerUsuarioPorEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException(
                         "Usuario con mail: " + username + " no se encuentra en la base de datos"));
 
