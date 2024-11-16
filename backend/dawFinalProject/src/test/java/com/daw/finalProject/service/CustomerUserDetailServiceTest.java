@@ -39,7 +39,7 @@ public class CustomerUserDetailServiceTest {
         usuario.setPassword("password");
         usuario.setRol("USER");
 
-        when(usuarioService.findByEmail("test@example.com")).thenReturn(Optional.of(usuario));
+        when(usuarioService.obtenerUsuarioPorEmail("test@example.com")).thenReturn(Optional.of(usuario));
 
         // Llamar al método a probar
         UserDetails userDetails = customerUserDetailService.loadUserByUsername("test@example.com");
@@ -55,7 +55,7 @@ public class CustomerUserDetailServiceTest {
     @Test
     public void loadUserByUsername_UserDoesNotExist_ThrowsException() {
         // Configurar el comportamiento del mock
-        when(usuarioService.findByEmail("nonexistent@example.com")).thenReturn(Optional.empty());
+        when(usuarioService.obtenerUsuarioPorEmail("nonexistent@example.com")).thenReturn(Optional.empty());
 
         // Llamar al método a probar y esperar una excepción
         assertThrows(UsernameNotFoundException.class, () -> {
