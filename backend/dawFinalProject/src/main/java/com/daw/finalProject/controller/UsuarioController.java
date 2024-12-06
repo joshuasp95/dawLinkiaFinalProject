@@ -20,7 +20,6 @@ import com.daw.finalProject.dto.UsuarioRecepcionDTO;
 import com.daw.finalProject.exception.ResourceNotFoundException;
 import com.daw.finalProject.mapper.UsuarioMapper;
 import com.daw.finalProject.model.Usuario;
-import com.daw.finalProject.payload.RegistroRequest;
 import com.daw.finalProject.responseEntity.Response;
 import com.daw.finalProject.service.UsuarioService;
 
