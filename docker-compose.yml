@@ -85,9 +85,9 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: prod
       SPRING_DATASOURCE_URL: jdbc:mysql://daw-db:3306/dawFinalProject?useSSL=false&serverTimezone=UTC
-      SPRING_DATASOURCE_USERNAME: "joshua" # Cambiado a usuario no root
-      SPRING_DATASOURCE_PASSWORD: "linkia.2024" # Cambiado a usuario no root
-      SPRING_FLYWAY_PASSWORD: "linkia.2024" # Cambiado a usuario no root
+      SPRING_DATASOURCE_USERNAME: "root" # Cambiado a usuario no root
+      SPRING_DATASOURCE_PASSWORD: "usopp12*" # Cambiado a usuario no root
+      SPRING_FLYWAY_PASSWORD: "usopp12*" # Cambiado a usuario no root
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     deploy:
       resources:
