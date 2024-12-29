@@ -22,7 +22,6 @@ public class UsuarioRecepcionDTO {
     @NotBlank(message = "El email es obligatorio")
     private String email;
 
-    @NotBlank(message = "El nombre es obligatorio")
     @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres")
     private String password; // Opcional al actualizar
 

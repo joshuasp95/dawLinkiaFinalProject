@@ -27,6 +27,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.extern.java.Log;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/api/users")
@@ -75,7 +77,9 @@ public class UsuarioController {
      * @param usuario Objeto que contiene los datos de usuario
      * @return Respuesta que indica el éxito o error del registro
      */
-    @PostMapping("/create")
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Obtiene la lista de todos los usuarios", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<?> registerUser(@Valid @RequestBody UsuarioRecepcionDTO usuario) {
 
         // Verificamos que el mail no existe en base de datos
@@ -98,4 +102,23 @@ public class UsuarioController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Endpoint para actualizar usuario
+     * 
+     * @param id el id del usuario a actualizar
+     * @return respuesta que indica el éxito o error de la actualización
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<Response<UsuarioDTO>> actualizarUsuario(@PathVariable Long id,
+            @Valid @RequestBody UsuarioRecepcionDTO usuario) {
+
+        Usuario nuevoUsuario = usuarioService.actualizarUsuarioPorId(id, usuario);
+
+        UsuarioDTO usuarioDTO = usuarioMapper.toUsuarioDTO(nuevoUsuario);
+
+        Response<UsuarioDTO> response = new Response<>(true, usuarioDTO, "Usuario actualizado correctamente");
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
+    }
 }
