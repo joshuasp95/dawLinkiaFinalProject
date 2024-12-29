@@ -61,9 +61,12 @@ public class AuthController {
             AuthResponse authResponse = new AuthResponse(token);
             Response<AuthResponse> response = new Response<>(true, authResponse, "Autenticación exitosa");
 
+            usuarioService.accesoCorrectoPorKafka(loginRequest.getEmail(), "success");
+
             return ResponseEntity.ok(response);
 
         } catch (BadCredentialsException ex) {
+            usuarioService.accesoIncorrectoPorKafka(loginRequest.getEmail(), "failure");
             return ResponseEntity.status(401).body("credenciales no válidas");
         }
 
@@ -108,4 +111,5 @@ public class AuthController {
 
         return ResponseEntity.ok(Collections.singletonMap("message", "Estas viendo contenido restringido!"));
     }
+
 }
